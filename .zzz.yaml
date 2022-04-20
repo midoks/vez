@@ -4,6 +4,7 @@ dirfilter:
 - tmp
 - .git
 - .github
+- assets
 - public
 - scripts
 - vendor
@@ -23,7 +24,11 @@ action:
   after:
   - ps -ef|grep 'vez web'| grep -v grep | awk '{print $2}' | xargs kill -9 
   -  ./vez web &
+  -  ./vez robot &
   exit:
+  - rm -rf ./vez
   - ps -ef|grep 'vez web'| grep -v grep
-  - ps -ef|grep 'vez web'| grep -v grep | awk '{print $2}' | xargs kill -9 
+  - ps -ef|grep 'vez web'| grep -v grep | awk '{print $2}' | xargs kill -9
+  - ps -ef|grep 'vez robot'| grep -v grep
+  - ps -ef|grep 'vez robot'| grep -v grep | awk '{print $2}' | xargs kill -9 
 link: https://github.com/midoks/zzz

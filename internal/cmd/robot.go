@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"github.com/urfave/cli"
+
+	"github.com/midoks/vez/internal/robot"
 )
 
 var Robot = cli.Command{
@@ -15,6 +17,6 @@ var Robot = cli.Command{
 }
 
 func runRobotService(c *cli.Context) error {
-
+	robot.RunCSDN()
 	return nil
 }
