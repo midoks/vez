@@ -1,5 +1,6 @@
 // Code generated for package templates by go-bindata DO NOT EDIT. (@generated)
 // sources:
+// ../../../templates/README.md
 package templates
 
 import (
@@ -76,6 +77,26 @@ func (fi bindataFileInfo) Sys() interface{} {
 	return nil
 }
 
+var _readmeMd = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x52\x56\x28\x4b\xad\xe2\x02\x61\x40\x00\x00\x00\xff\xff\xbc\x11\xe4\xa3\x0a\x00\x00\x00"
+
+func readmeMdBytes() ([]byte, error) {
+	return bindataRead(
+		_readmeMd,
+		"README.md",
+	)
+}
+
+func readmeMd() (*asset, error) {
+	bytes, err := readmeMdBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "README.md", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -128,6 +149,7 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
+	"README.md": readmeMd,
 }
 
 // AssetDir returns the file names below a certain
@@ -170,7 +192,9 @@ type bintree struct {
 	Children map[string]*bintree
 }
 
-var _bintree = &bintree{nil, map[string]*bintree{}}
+var _bintree = &bintree{nil, map[string]*bintree{
+	"README.md": &bintree{readmeMd, map[string]*bintree{}},
+}}
 
 // RestoreAsset restores an asset under the given directory
 func RestoreAsset(dir, name string) error {
