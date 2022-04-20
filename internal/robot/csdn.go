@@ -109,7 +109,7 @@ func CreateCSDNCollector() *colly.Collector {
 }
 
 func RunCSDN() {
-	csdn.CreateCSDNCollector()
+	csdn := CreateCSDNCollector()
 
 	csdn.Visit("https://blog.csdn.net/mhs12345")
 	csdn.Wait()
