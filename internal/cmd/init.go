@@ -5,15 +5,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"net/http"
-	_ "net/http/pprof"
-
 	"gopkg.in/ini.v1"
 
 	"github.com/midoks/vez/internal/conf"
 	"github.com/midoks/vez/internal/logs"
 	"github.com/midoks/vez/internal/mgdb"
-	// "github.com/midoks/vez/internal/render"
 	"github.com/midoks/vez/internal/tools"
 )
 
@@ -65,26 +61,6 @@ func Init(customConf string) error {
 	conf.Init(customConf)
 	logs.Init()
 	mgdb.Init()
-
-	// renderOpt := render.Options{
-	// 	Directory:         filepath.Join(conf.WorkDir(), "templates"),
-	// 	AppendDirectories: []string{filepath.Join(conf.CustomDir(), "templates")},
-	// 	Funcs:             template.FuncMap(),
-	// 	IndentJSON:        true,
-	// }
-
-	// if !conf.Server.LoadAssetsFromDisk {
-	// 	renderOpt.TemplateFileSystem = templates.NewTemplateFileSystem("", renderOpt.AppendDirectories[0])
-	// }
-
-	// render.Renderer(renderOpt)
-
-	if conf.App.RunMode != "prod" {
-		go func() {
-			port := fmt.Sprintf(":%s", conf.Debug.Port)
-			http.ListenAndServe(port, nil)
-		}()
-	}
 
 	return nil
 }

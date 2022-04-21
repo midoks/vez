@@ -1,9 +1,18 @@
 package cmd
 
 import (
+	// "embed"
+	"fmt"
+	"net/http"
+	_ "net/http/pprof"
+	// "os"
+
+	"github.com/flamego/flamego"
+	"github.com/flamego/template"
+
 	"github.com/urfave/cli"
 
-	"github.com/kataras/iris/v12"
+	"github.com/midoks/vez/internal/conf"
 )
 
 var Service = cli.Command{
@@ -16,55 +25,45 @@ var Service = cli.Command{
 	},
 }
 
-// Book example.
-type Book struct {
-	Title string `json:"title"`
+///go:embed templates
+// var Templates embed.FS
+
+func newFlamego() *flamego.Flame {
+
+	// dir, _ := os.Getwd()
+
+	f := flamego.Classic()
+
+	f.Use(flamego.Static(flamego.StaticOptions{Directory: "public"}))
+
+	// fs, err := template.EmbedFS(Templates, "templates", []string{".tmpl"})
+	// if err != nil {
+	// 	panic(err)
+	// }
+	f.Use(template.Templater())
+	// f.Use(template.Templater(template.Options{FileSystem: fs}))
+
+	return f
 }
 
-func list(ctx iris.Context) {
-	books := []Book{
-		{"Mastering Concurrency in Go"},
-		{"Go Design Patterns"},
-		{"Black Hat Go"},
-	}
-
-	ctx.JSON(books)
-	// 提示: 在服务器优先级和客户端请求中进行响应协商，
-	// 以此来代替 ctx.JSON:
-	// ctx.Negotiation().JSON().MsgPack().Protobuf()
-	// ctx.Negotiate(books)
-}
-
-func create(ctx iris.Context) {
-	var b Book
-	err := ctx.ReadJSON(&b)
-	// 提示: 使用 ctx.ReadBody(&b) 代替，来绑定所有类型的入参
-	if err != nil {
-		// ctx.StopWithProblem(iris.StatusBadRequest, iris.NewProblem().Title("Book creation failure").DetailErr(err))
-		// 提示: 如果仅有纯文本（plain text）错误响应，
-		// 可使用 ctx.StopWithError(code, err)
-		return
-	}
-
-	println("Received Book: " + b.Title)
-
-	ctx.StatusCode(iris.StatusCreated)
+func Router(f *flamego.Flame) {
+	f.Get("/", func(t template.Template, data template.Data) {
+		t.HTML(http.StatusOK, "home")
+	})
 }
 
 func runWebService(c *cli.Context) error {
 
-	app := iris.New()
-
-	booksAPI := app.Party("/books")
-	{
-		// booksAPI.Use(iris.Compression)
-
-		// GET: http://localhost:8080/books
-		booksAPI.Get("/", list)
-		// POST: http://localhost:8080/books
-		booksAPI.Post("/", create)
+	if conf.App.RunMode != "prod" {
+		go func() {
+			port := fmt.Sprintf(":%s", conf.Debug.Port)
+			http.ListenAndServe(port, nil)
+		}()
 	}
 
-	app.Listen(":8080")
+	f := newFlamego()
+	Router(f)
+	f.Run()
+
 	return nil
 }

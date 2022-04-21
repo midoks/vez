@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	CSND_NAME    = "csnd"
+	CSND_NAME    = "csdn"
 	LETTER_BYTES = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 )
 
@@ -74,7 +74,7 @@ func CreateCSDNCollector() *colly.Collector {
 				e.Request.Visit(url)
 				return
 			}
-			fmt.Println("repeat", url)
+			// fmt.Println("repeat", url)
 		}
 	})
 
@@ -137,15 +137,16 @@ func CreateCSDNCollector() *colly.Collector {
 
 func RunCSDN() {
 	// go func() {
-	csdn := CreateCSDNCollector()
 	for {
-
+		csdn := CreateCSDNCollector()
 		// csdn.Visit("https://blog.csdn.net/gezongbo/article/details/122108507")
 		// csdn.Visit("https://blog.csdn.net/rank/list")
 
-		csdn.Visit("https://blog.csdn.net/gezongbo/article/details/122108507")
+		csdn.Visit("https://blog.csdn.net/arren2011/article/details/6916237")
 		csdn.Wait()
-		time.Sleep(time.Second * 5)
+
+		fmt.Println("dddd")
+		time.Sleep(time.Second * 60 * 5)
 	}
 	// }()
 }

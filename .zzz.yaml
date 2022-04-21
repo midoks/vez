@@ -9,9 +9,9 @@ dirfilter:
 - scripts
 - vendor
 - logs
-- templates
 ext:
 - go
+- tmpl
 enablerun: true
 action:
   before:
@@ -23,6 +23,7 @@ action:
   - go mod vendor
   after:
   - ps -ef|grep 'vez web'| grep -v grep | awk '{print $2}' | xargs kill -9 
+  - ps -ef|grep 'vez robot'| grep -v grep | awk '{print $2}' | xargs kill -9 
   -  ./vez web &
   -  ./vez robot &
   exit:
