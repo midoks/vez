@@ -5,11 +5,15 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 
-	"github.com/flamego/flamego"
-	"github.com/flamego/template"
 	"github.com/urfave/cli"
 
+	"github.com/flamego/brotli"
+	"github.com/flamego/flamego"
+	"github.com/flamego/template"
+
 	"github.com/midoks/vez/internal/conf"
+	"github.com/midoks/vez/internal/router"
+	"github.com/midoks/vez/internal/tmpl"
 )
 
 var Service = cli.Command{
@@ -32,20 +36,20 @@ func newFlamego() *flamego.Flame {
 	// if err != nil {
 	// 	panic(err)
 	// }
-	f.Use(template.Templater())
-	// f.Use(template.Templater(template.Options{FileSystem: fs}))
 
+	f.Use(template.Templater(template.Options{
+		FuncMaps: tmpl.FuncMaps(),
+	}))
+	// f.Use(template.Templater(template.Options{FileSystem: fs}))
+	f.Use(brotli.Brotli())
 	return f
 }
 
 func setRouter(f *flamego.Flame) {
-	f.Get("/", func(t template.Template, data template.Data) {
-		t.HTML(http.StatusOK, "home")
-	})
+	f.Get("/", router.Home)
 
-	f.Get("/csdn/{user}/{id}.html", func(t template.Template, data template.Data) {
-		t.HTML(http.StatusOK, "page/content")
-	})
+	f.Get("/rand", router.Rand)
+	f.Get("/csdn/{user}/{id}.html", router.CsdnPageCotent)
 }
 
 func runWebService(c *cli.Context) error {

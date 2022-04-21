@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/qiniu/qmgo"
+	"github.com/qiniu/qmgo/operator"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -53,6 +54,25 @@ func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 func ContentOriginFindOne(source, id string) (result *Content, err error) {
 	one := &Content{}
 	err = cliContent.Find(ctx, bson.M{"source": source, "id": id}).One(one)
+	return one, err
+}
+
+func ContentRand() (result *Content, err error) {
+	one := &Content{}
+
+	randStage := bson.D{
+		{
+			operator.Sample,
+			bson.D{
+				{
+					"size",
+					1,
+				},
+			},
+		},
+	}
+
+	err = cliContent.Aggregate(ctx, qmgo.Pipeline{randStage}).One(&one)
 	return one, err
 }
 

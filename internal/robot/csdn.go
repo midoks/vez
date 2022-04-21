@@ -100,10 +100,9 @@ func CreateCSDNCollector() *colly.Collector {
 				return
 			}
 
-			contentBody := htmlquery.Find(doc, `//div[@id="content_views"]/div`)
-
+			contentBody := htmlquery.Find(doc, `//div[@id="article_content"]/div`)
 			if len(contentBody) == 0 {
-				contentBody = htmlquery.Find(doc, `//div[@id="article_content"]/div`)
+				contentBody = htmlquery.Find(doc, `//div[@id="content_views"]/div`)
 				if len(contentBody) == 0 {
 					return
 				}
@@ -142,7 +141,7 @@ func RunCSDN() {
 		// csdn.Visit("https://blog.csdn.net/gezongbo/article/details/122108507")
 		// csdn.Visit("https://blog.csdn.net/rank/list")
 
-		csdn.Visit("https://blog.csdn.net/arren2011/article/details/6916237")
+		csdn.Visit("https://blog.csdn.net/weixin_42510567/article/details/117804028")
 		csdn.Wait()
 
 		fmt.Println("dddd")

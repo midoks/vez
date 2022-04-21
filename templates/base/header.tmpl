@@ -6,17 +6,23 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="Content-Language" content="cn">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<link rel="shortcut icon" href="/static/favicon.png">
+<link rel="shortcut icon" href="/favicon.png">
 
 <!-- 新 Bootstrap 核心 CSS 文件 -->
-<link rel="stylesheet" href="/static/css/bootstrap.min.css?v=1">
-<link rel="stylesheet" href="/static/self/self.css?v=2">
+<link rel="stylesheet" href="/static/css/bootstrap.min.css?v={{BuildCommit}}">
+<link rel="stylesheet" href="/static/self/self.css?v={{BuildCommit}}">
 
 
-<script src="/static/js/jquery-1.11.0.min.js?v=1"></script>
-<script src="/static/js/bootstrap.min.js?v=1"></script>
+<!-- <script src="/static/js/jquery-1.11.0.min.js?v={{BuildCommit}}"></script> -->
+<script src="/static/js/bootstrap.min.js?v={{BuildCommit}}"></script>
 
+{{if .Article}}
+<title>{{.Article.Title}} - 悦读</title>
+{{else}}
 <title>悦读</title>
+{{end}}
+
+
 <meta name="keywords" content="悦读">
 <meta name="description" content="悦读">
 
@@ -52,8 +58,8 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="#" class="nav-link px-2 text-secondary">主页</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">随机阅读</a></li>
+          <li><a href="/" class="nav-link px-2 text-white">主页</a></li>
+          <li><a href="/rand" class="nav-link px-2 text-white">随机阅读</a></li>
           <li><a href="#" class="nav-link px-2 text-white">关于</a></li>
         </ul>
 

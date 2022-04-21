@@ -5,9 +5,11 @@ go 1.17
 require (
 	github.com/antchfx/htmlquery v1.2.4
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
+	github.com/flamego/brotli v1.0.1
 	github.com/flamego/flamego v1.2.0
 	github.com/flamego/template v1.0.0
 	github.com/gocolly/colly v1.2.0
+	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea
 	github.com/pkg/errors v0.9.1
 	github.com/qiniu/qmgo v1.1.0
@@ -20,9 +22,11 @@ require (
 require (
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/alecthomas/participle/v2 v2.0.0-alpha7 // indirect
+	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/xmlquery v1.3.10 // indirect
 	github.com/antchfx/xpath v1.2.0 // indirect
+	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-macaron/inject v0.0.0-20160627170012-d8a0b8677191 // indirect
@@ -34,6 +38,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
+	github.com/gorilla/css v1.0.0 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
