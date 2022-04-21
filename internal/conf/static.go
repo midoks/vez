@@ -69,6 +69,11 @@ var (
 		LandingURL string `ini:"LANDING_URL"`
 	}
 
+	Mongdb struct {
+		Addr string
+		Db   string
+	}
+
 	// Session settings
 	Session struct {
 		Provider       string

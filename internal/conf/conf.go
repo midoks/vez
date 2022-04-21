@@ -87,6 +87,14 @@ func Init(customConf string) error {
 	}
 
 	// ****************************
+	// ----- Web settings -----
+	// ****************************
+
+	if err = File.Section("mongdb").MapTo(&Mongdb); err != nil {
+		return errors.Wrap(err, "mapping [mongdb] section")
+	}
+
+	// ****************************
 	// ----- Session settings -----
 	// ****************************
 
