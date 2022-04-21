@@ -102,14 +102,6 @@ func Init(customConf string) error {
 		return errors.Wrap(err, "mapping [session] section")
 	}
 
-	// ***************************
-	// ----- i18n settings -----
-	// ***************************
-	I18n = new(i18nConf)
-	if err = File.Section("i18n").MapTo(&I18n); err != nil {
-		return errors.Wrap(err, "mapping [i18n] section")
-	}
-
 	if err = File.Section("cache").MapTo(&Cache); err != nil {
 		return errors.Wrap(err, "mapping [cache] section")
 	} else if err = File.Section("other").MapTo(&Other); err != nil {

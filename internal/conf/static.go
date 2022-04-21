@@ -106,21 +106,3 @@ var (
 	// Global setting
 	HasRobotsTxt bool
 )
-
-type i18nConf struct {
-	Langs     []string          `delim:","`
-	Names     []string          `delim:","`
-	dateLangs map[string]string `ini:"-"`
-}
-
-// DateLang transforms standard language locale name to corresponding value in datetime plugin.
-func (c *i18nConf) DateLang(lang string) string {
-	name, ok := c.dateLangs[lang]
-	if ok {
-		return name
-	}
-	return "en"
-}
-
-// I18n settings
-var I18n *i18nConf
