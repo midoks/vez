@@ -2,7 +2,10 @@ package robot
 
 import (
 	"fmt"
+	"math/rand"
 	"strings"
+	"time"
+	"unsafe"
 
 	"github.com/antchfx/htmlquery"
 	"github.com/gocolly/colly"
@@ -10,6 +13,11 @@ import (
 	"github.com/midoks/vez/internal/lazyregexp"
 	"github.com/midoks/vez/internal/mgdb"
 	// "github.com/gocolly/colly/v2/debug"
+)
+
+const (
+	CSND_NAME    = "csnd"
+	LETTER_BYTES = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 )
 
 func isMatchCSDN_Article(url string) bool {
@@ -24,18 +32,31 @@ func getMatchCSDN_User_ID(url string) (string, string) {
 	return "", ""
 }
 
+func BytesToString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
+
+func RandomString() string {
+	b := make([]byte, rand.Intn(10)+10)
+	for i := range b {
+		b[i] = LETTER_BYTES[rand.Intn(len(LETTER_BYTES))]
+	}
+	return BytesToString(b)
+}
+
 func CreateCSDNCollector() *colly.Collector {
 	csdn := colly.NewCollector(
 		colly.Async(true),
+		colly.MaxDepth(10),
 		// Attach a debugger to the collector
 		// colly.Debugger(&debug.LogDebugger{}),
 	)
 
-	// csdn.Limit(&colly.LimitRule{
-	// 	DomainGlob:  "*httpbin.*",
-	// 	Parallelism: 3,
-	// 	Delay:       5 * time.Second,
-	// })
+	csdn.Limit(&colly.LimitRule{
+		DomainGlob:  "*blog.csdn.net.*",
+		Parallelism: 3,
+		Delay:       5 * time.Second,
+	})
 
 	// Find and visit all links
 	csdn.OnHTML("a", func(e *colly.HTMLElement) {
@@ -48,18 +69,24 @@ func CreateCSDNCollector() *colly.Collector {
 				return
 			}
 
-			_, err := mgdb.ContentOriginFindOne("csdn", id)
+			_, err := mgdb.ContentOriginFindOne(CSND_NAME, id)
 			if err != nil {
 				e.Request.Visit(url)
 				return
 			}
-			// fmt.Println("repeat", url)
+			fmt.Println("repeat", url)
 		}
 	})
 
-	// tmp.OnRequest(func(r *colly.Request) {
-	// 	fmt.Println("Visiting", r.URL)
-	// })
+	csdn.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("User-Agent", RandomString())
+		// fmt.Println("Visiting", r.URL)
+	})
+
+	// Set error handler
+	csdn.OnError(func(r *colly.Response, err error) {
+		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
+	})
 
 	csdn.OnScraped(func(r *colly.Response) {
 
@@ -97,7 +124,7 @@ func CreateCSDNCollector() *colly.Collector {
 			html := htmlquery.OutputHTML(contentBody[0], false)
 			mgdb.ContentAdd(mgdb.Content{
 				Url:    url,
-				Source: "csdn",
+				Source: CSND_NAME,
 				User:   user,
 				Id:     id,
 				Title:  title,
@@ -109,9 +136,16 @@ func CreateCSDNCollector() *colly.Collector {
 }
 
 func RunCSDN() {
+	// go func() {
 	csdn := CreateCSDNCollector()
+	for {
 
-	// csdn.Visit("https://blog.csdn.net/gezongbo/article/details/122108507")
-	csdn.Visit("https://blog.csdn.net/rank/list")
-	csdn.Wait()
+		// csdn.Visit("https://blog.csdn.net/gezongbo/article/details/122108507")
+		// csdn.Visit("https://blog.csdn.net/rank/list")
+
+		csdn.Visit("https://blog.csdn.net/gezongbo/article/details/122108507")
+		csdn.Wait()
+		time.Sleep(time.Second * 5)
+	}
+	// }()
 }
