@@ -1,7 +1,7 @@
 package router
 
 import (
-	"fmt"
+	// "fmt"
 	"net/http"
 
 	"github.com/flamego/flamego"
@@ -32,6 +32,9 @@ func Rand(c flamego.Context, t template.Template, data template.Data) {
 }
 
 func CsdnPageCotent(c flamego.Context, t template.Template, data template.Data) {
+
+	// url := "https://blog.csdn.net/" + c.Param("user") + "/article/details/" + c.Param("id")
+	// robot.SpiderCSDNUrl(url)
 
 	d, _ := mgdb.ContentOriginFindOne(robot.CSND_NAME, c.Param("id"))
 	data["Article"] = d

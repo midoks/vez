@@ -134,6 +134,14 @@ func CreateCSDNCollector() *colly.Collector {
 	return csdn
 }
 
+func SpiderCSDNUrl(url string) {
+	go func() {
+		csdn := CreateCSDNCollector()
+		csdn.Visit(url)
+		csdn.Wait()
+	}()
+}
+
 func RunCSDN() {
 	// go func() {
 	for {
