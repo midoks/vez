@@ -1,15 +1,12 @@
 package cmd
 
 import (
-	// "embed"
 	"fmt"
 	"net/http"
 	_ "net/http/pprof"
-	// "os"
 
 	"github.com/flamego/flamego"
 	"github.com/flamego/template"
-
 	"github.com/urfave/cli"
 
 	"github.com/midoks/vez/internal/conf"
@@ -25,12 +22,7 @@ var Service = cli.Command{
 	},
 }
 
-///go:embed templates
-// var Templates embed.FS
-
 func newFlamego() *flamego.Flame {
-
-	// dir, _ := os.Getwd()
 
 	f := flamego.Classic()
 
@@ -46,9 +38,13 @@ func newFlamego() *flamego.Flame {
 	return f
 }
 
-func Router(f *flamego.Flame) {
+func setRouter(f *flamego.Flame) {
 	f.Get("/", func(t template.Template, data template.Data) {
 		t.HTML(http.StatusOK, "home")
+	})
+
+	f.Get("/csdn/{user}/{id}.html", func(t template.Template, data template.Data) {
+		t.HTML(http.StatusOK, "page/content")
 	})
 }
 
@@ -62,7 +58,7 @@ func runWebService(c *cli.Context) error {
 	}
 
 	f := newFlamego()
-	Router(f)
+	setRouter(f)
 	f.Run()
 
 	return nil
