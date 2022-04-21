@@ -5,6 +5,8 @@ import (
 
 	"github.com/qiniu/qmgo"
 	"github.com/qiniu/qmgo/options"
+
+	"github.com/midoks/vez/internal/conf"
 )
 
 var (
@@ -19,15 +21,17 @@ var (
 
 func Init() error {
 
+	link := "mongodb://" + conf.Mongodb.Addr
+
 	ctx = context.Background()
-	client, err = qmgo.NewClient(ctx, &qmgo.Config{Uri: "mongodb://127.0.0.1:27017"})
+	client, err = qmgo.NewClient(ctx, &qmgo.Config{Uri: link})
 	if err != nil {
 		return err
 	}
-	db = client.Database("vez")
+	db = client.Database(conf.Mongodb.Db)
 	collection = db.Collection("content")
 
-	cliContent, err = qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://127.0.0.1:27017", Database: "vez", Coll: "content"})
+	cliContent, err = qmgo.Open(ctx, &qmgo.Config{Uri: link, Database: conf.Mongodb.Db, Coll: "content"})
 	if err != nil {
 		return err
 	}

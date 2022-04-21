@@ -33,8 +33,8 @@ func autoMakeCustomConf(customConf string) error {
 	cfg.Section("web").Key("http_port").SetValue("11011")
 	cfg.Section("session").Key("provider").SetValue("memory")
 
-	cfg.Section("mongdb").Key("addr").SetValue("127.0.0.1:27017")
-	cfg.Section("mongdb").Key("db").SetValue("vez")
+	cfg.Section("mongodb").Key("addr").SetValue("127.0.0.1:27017")
+	cfg.Section("mongodb").Key("db").SetValue("vez")
 
 	cfg.Section("security").Key("install_lock").SetValue("true")
 	secretKey := tools.RandString(15)

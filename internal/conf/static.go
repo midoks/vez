@@ -69,7 +69,7 @@ var (
 		LandingURL string `ini:"LANDING_URL"`
 	}
 
-	Mongdb struct {
+	Mongodb struct {
 		Addr string
 		Db   string
 	}
