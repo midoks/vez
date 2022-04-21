@@ -31,6 +31,10 @@ func Rand(c flamego.Context, t template.Template, data template.Data) {
 	c.Redirect(url)
 }
 
+func About(c flamego.Context, t template.Template, data template.Data) {
+	t.HTML(http.StatusOK, "about")
+}
+
 func CsdnPageCotent(c flamego.Context, t template.Template, data template.Data) {
 
 	// url := "https://blog.csdn.net/" + c.Param("user") + "/article/details/" + c.Param("id")
