@@ -5,6 +5,7 @@ import (
 
 	"github.com/qiniu/qmgo"
 	"github.com/qiniu/qmgo/options"
+	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/midoks/vez/internal/conf"
 )
@@ -17,6 +18,17 @@ var (
 	collection *qmgo.Collection
 
 	cliContent *qmgo.QmgoClient
+)
+
+type (
+	// M is an alias of bson.M
+	M = bson.M
+	// A is an alias of bson.A
+	A = bson.A
+	// D is an alias of bson.D
+	D = bson.D
+	// E is an alias of bson.E
+	E = bson.E
 )
 
 func Init() error {

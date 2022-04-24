@@ -146,13 +146,17 @@ func RunCSDN() {
 	// go func() {
 	for {
 		csdn := CreateCSDNCollector()
-		// csdn.Visit("https://blog.csdn.net/gezongbo/article/details/122108507")
-		// csdn.Visit("https://blog.csdn.net/rank/list")
 
-		csdn.Visit("https://blog.csdn.net/weixin_42510567/article/details/117804028")
+		r, err := mgdb.ContentRand()
+		if err == nil {
+			fmt.Println("rand visiting", r.Url)
+			csdn.Visit(r.Url)
+		} else {
+			fmt.Println("visiting root")
+			csdn.Visit("https://blog.csdn.net")
+		}
+
 		csdn.Wait()
-
-		fmt.Println("dddd")
 		time.Sleep(time.Second * 60 * 5)
 	}
 	// }()

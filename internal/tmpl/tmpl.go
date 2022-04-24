@@ -10,6 +10,8 @@ import (
 	"sync"
 	"time"
 
+	strip "github.com/grokify/html-strip-tags-go"
+
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/midoks/vez/internal/conf"
 )
@@ -32,13 +34,25 @@ func FuncMaps() []template.FuncMap {
 			"Year": func() int {
 				return time.Now().Year()
 			},
-			"Safe":     Safe,
-			"Sanitize": bluemonday.UGCPolicy().Sanitize,
+			"HeadTitle": HeadTitle,
+			"Safe":      Safe,
+			"Sanitize":  bluemonday.UGCPolicy().Sanitize,
 		}}
 	})
 	return funcMap
 }
 
-func Safe(raw string) template.HTML {
-	return template.HTML(raw)
+func Safe(original string) template.HTML {
+	return template.HTML(original)
+}
+
+func HeadTitle(original string) string {
+	stripped := strip.StripTags(original)
+	strippedRune := []rune(stripped)
+	sublen := 100
+	orilen := len(strippedRune)
+	if orilen < sublen {
+		return string(strippedRune)
+	}
+	return string(strippedRune[0:sublen])
 }

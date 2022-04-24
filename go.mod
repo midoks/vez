@@ -9,6 +9,7 @@ require (
 	github.com/flamego/flamego v1.2.0
 	github.com/flamego/template v1.0.0
 	github.com/gocolly/colly v1.2.0
+	github.com/grokify/html-strip-tags-go v0.0.1
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea
 	github.com/pkg/errors v0.9.1

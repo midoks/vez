@@ -16,6 +16,9 @@ func Hello() string {
 }
 
 func Home(t template.Template, data template.Data) {
+
+	d, _ := mgdb.ContentOriginFind()
+	data["Articles"] = d
 	t.HTML(http.StatusOK, "home")
 }
 
