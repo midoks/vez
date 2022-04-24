@@ -2,7 +2,7 @@ package mgdb
 
 import (
 	"errors"
-	"fmt"
+	// "fmt"
 	"time"
 
 	"github.com/qiniu/qmgo"
@@ -71,9 +71,9 @@ func ContentOriginFind() (result []Content, err error) {
 	// err = cliContent.Aggregate(ctx, qmgo.Pipeline{matchStage, groupStage}).All(&batch)
 	// fmt.Println(err, batch)
 
-	err = cliContent.Find(ctx, D{}).Sort("createtime").Limit(15).All(&batch)
+	err = cliContent.Find(ctx, D{}).Sort("-createtime").Limit(15).All(&batch)
 
-	fmt.Println(err, batch)
+	// fmt.Println(err, batch)
 	return batch, err
 }
 
