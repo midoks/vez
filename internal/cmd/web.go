@@ -12,6 +12,7 @@ import (
 	"github.com/flamego/template"
 
 	"github.com/midoks/vez/internal/conf"
+	"github.com/midoks/vez/internal/context"
 	"github.com/midoks/vez/internal/router"
 	"github.com/midoks/vez/internal/tmpl"
 )
@@ -46,11 +47,15 @@ func newFlamego() *flamego.Flame {
 }
 
 func setRouter(f *flamego.Flame) {
-	f.Get("/", router.Home)
 
-	f.Get("/rand", router.Rand)
-	f.Get("/about", router.About)
-	f.Get("/csdn/{user}/{id}.html", router.CsdnPageCotent)
+	f.Group("", func() {
+		f.Get("/", router.Home)
+
+		f.Get("/rand", router.Rand)
+		f.Get("/about", router.About)
+		f.Get("/csdn/{user}/{id}.html", router.CsdnPageCotent)
+	}, context.Contexter())
+
 }
 
 func runWebService(c *cli.Context) error {
