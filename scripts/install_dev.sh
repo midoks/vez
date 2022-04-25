@@ -20,6 +20,8 @@ else
 fi
 
 rm -rf ./go.sum
+rm -rf ./go.mod
+go mod init github.com/midoks/vez
 go mod tidy
 go mod vendor
 
