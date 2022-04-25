@@ -62,7 +62,7 @@ func runWebService(c *cli.Context) error {
 
 	if conf.App.RunMode != "prod" {
 		go func() {
-			port := fmt.Sprintf(":%s", conf.Debug.Port)
+			port := ":" + conf.Debug.Port
 			http.ListenAndServe(port, nil)
 		}()
 	}
