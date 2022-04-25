@@ -47,7 +47,7 @@ func RandomString() string {
 func CreateCSDNCollector() *colly.Collector {
 	csdn := colly.NewCollector(
 		colly.Async(true),
-		colly.MaxDepth(10),
+		colly.MaxDepth(2),
 		// Attach a debugger to the collector
 		// colly.Debugger(&debug.LogDebugger{}),
 	)
@@ -143,23 +143,18 @@ func SpiderCSDNUrl(url string) {
 }
 
 func RunCSDN() {
-	// go func() {
-	for {
-		time.Sleep(time.Second * 60 * 1)
-		csdn := CreateCSDNCollector()
 
-		r, err := mgdb.ContentRand()
-		if err == nil {
-			fmt.Println("rand visiting", r.Url)
-			csdn.Visit(r.Url)
-		} else {
-			fmt.Println("visiting root")
-			csdn.Visit("https://blog.csdn.net")
-		}
+	csdn := CreateCSDNCollector()
 
-		csdn.Wait()
-		time.Sleep(time.Second * 60 * 4)
-		csdn = nil
+	r, err := mgdb.ContentRand()
+	if err == nil {
+		fmt.Println("rand visiting", r.Url)
+		csdn.Visit(r.Url)
+	} else {
+		fmt.Println("visiting root")
+		csdn.Visit("https://blog.csdn.net")
 	}
-	// }()
+
+	csdn.Wait()
+	time.Sleep(time.Second * 60 * 4)
 }
