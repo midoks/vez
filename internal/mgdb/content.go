@@ -77,6 +77,12 @@ func ContentOriginFind() (result []Content, err error) {
 	return batch, err
 }
 
+func ContentNewsest() (result []Content, err error) {
+	var batch []Content
+	err = cliContent.Find(ctx, D{}).Sort("-createtime").Limit(5).All(&batch)
+	return batch, err
+}
+
 func ContentRand() (result *Content, err error) {
 	one := &Content{}
 
