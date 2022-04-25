@@ -145,6 +145,7 @@ func SpiderCSDNUrl(url string) {
 func RunCSDN() {
 	// go func() {
 	for {
+		time.Sleep(time.Second * 60 * 1)
 		csdn := CreateCSDNCollector()
 
 		r, err := mgdb.ContentRand()
@@ -157,7 +158,7 @@ func RunCSDN() {
 		}
 
 		csdn.Wait()
-		time.Sleep(time.Second * 60 * 5)
+		time.Sleep(time.Second * 60 * 4)
 	}
 	// }()
 }
