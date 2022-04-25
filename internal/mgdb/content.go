@@ -77,7 +77,7 @@ func ContentOriginFind() (result []Content, err error) {
 	return batch, err
 }
 
-func ContentNewsest() (result []Content, err error) {
+func ContentNewsest() ([]Content, error) {
 	var batch []Content
 	err = cliContent.Find(ctx, D{}).Sort("-createtime").Limit(5).All(&batch)
 	return batch, err
@@ -100,4 +100,23 @@ func ContentRand() (result *Content, err error) {
 
 	err = cliContent.Aggregate(ctx, qmgo.Pipeline{randStage}).One(&one)
 	return one, err
+}
+
+func ContentRandNum(num int64) ([]Content, error) {
+	var batch []Content
+
+	randStage := D{
+		{
+			operator.Sample,
+			D{
+				{
+					"size",
+					num,
+				},
+			},
+		},
+	}
+
+	err = cliContent.Aggregate(ctx, qmgo.Pipeline{randStage}).All(&batch)
+	return batch, err
 }
