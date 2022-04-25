@@ -159,6 +159,7 @@ func RunCSDN() {
 
 		csdn.Wait()
 		time.Sleep(time.Second * 60 * 4)
+		csdn = nil
 	}
 	// }()
 }
