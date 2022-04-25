@@ -69,7 +69,7 @@ func runWebService(c *cli.Context) error {
 
 	f := newFlamego()
 	setRouter(f)
-	f.Run()
+	f.Run(conf.Web.HttpPort)
 
 	return nil
 }
