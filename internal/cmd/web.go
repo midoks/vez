@@ -4,6 +4,7 @@ import (
 	// "fmt"
 	"net/http"
 	_ "net/http/pprof"
+	"path/filepath"
 
 	"github.com/urfave/cli"
 
@@ -15,6 +16,8 @@ import (
 	"github.com/midoks/vez/internal/context"
 	"github.com/midoks/vez/internal/router"
 	"github.com/midoks/vez/internal/tmpl"
+
+	"github.com/midoks/vez/internal/assets/public"
 )
 
 var Service = cli.Command{
@@ -31,16 +34,23 @@ func newFlamego() *flamego.Flame {
 
 	f := flamego.Classic()
 
-	f.Use(flamego.Static(flamego.StaticOptions{Directory: "public"}))
+	f.Use(flamego.Static(flamego.StaticOptions{Directory: filepath.Join(conf.CustomDir(), "public")}))
 
-	// fs, err := template.EmbedFS(Templates, "templates", []string{".tmpl"})
-	// if err != nil {
-	// 	panic(err)
-	// }
+	var publicFs http.FileSystem
+	if !conf.Web.LoadAssetsFromDisk {
+		publicFs = public.NewFileSystem()
+	}
+
+	f.Use(flamego.Static(flamego.StaticOptions{
+		Directory:     filepath.Join(conf.WorkDir(), "public"),
+		FileSystem:    publicFs,
+		EnableLogging: false,
+	}))
 
 	f.Use(template.Templater(template.Options{
 		FuncMaps: tmpl.FuncMaps(),
 	}))
+
 	// f.Use(template.Templater(template.Options{FileSystem: fs}))
 	f.Use(brotli.Brotli())
 	return f
