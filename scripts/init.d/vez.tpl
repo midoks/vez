@@ -55,24 +55,7 @@ app_start(){
         echo "Starting ${SERVICENAME}(pid $(echo $isStart)) already running"
     fi
 
-    isStart=$(ps aux |grep "$SERVICENAME robot" | grep -v grep | awk '{print $2}')
-    if [ "$isStart" == '' ];then
-            echo -e "Starting $SERVICENAME robot... \c"
-            cd $app_path && daemon "${app_path}/$SERVICENAME robot &"
-            sleep 0.3
-            isStart=$(ps aux |grep "$SERVICENAME robot" |grep -v grep|awk '{print $2}')
-            if [ "$isStart" == '' ];then
-                    echo -e "\033[31mfailed\033[0m"
-                    echo '------------------------------------------------------'
-                    tail -n 20 $mw_path/logs/task.log
-                    echo '------------------------------------------------------'
-                    echo -e "\033[31mError: ${SERVICENAME} service startup failed.\033[0m"
-                    return;
-            fi
-            echo -e "\033[32mdone\033[0m"
-    else
-            echo "Starting ${SERVICENAME}... robot (pid $isStart) already running"
-    fi
+  
 }
 
 app_stop(){
@@ -87,7 +70,7 @@ app_stop(){
 
     pids=`ps -ef|grep "$SERVICENAME robot" |grep -v grep|awk '{print $2}'`
     arr=($pids)
-    echo -e "Stopping ${SERVICENAME}... \c"
+    echo -e "Stopping ${SERVICENAME} robot ... \c"
     for p in ${arr[@]}
     do
             kill -9 $p
@@ -111,9 +94,31 @@ app_status(){
     fi
 }
 
+app_robot(){
+    isStart=$(ps aux |grep "$SERVICENAME robot" | grep -v grep | awk '{print $2}')
+    if [ "$isStart" == '' ];then
+            echo -e "Starting $SERVICENAME robot... \c"
+            cd $app_path && daemon "${app_path}/$SERVICENAME robot &"
+            sleep 0.3
+            isStart=$(ps aux |grep "$SERVICENAME robot" |grep -v grep|awk '{print $2}')
+            if [ "$isStart" == '' ];then
+                    echo -e "\033[31mfailed\033[0m"
+                    echo '------------------------------------------------------'
+                    tail -n 20 $mw_path/logs/task.log
+                    echo '------------------------------------------------------'
+                    echo -e "\033[31mError: ${SERVICENAME} service startup failed.\033[0m"
+                    return;
+            fi
+            echo -e "\033[32mdone\033[0m"
+    else
+            echo "Starting ${SERVICENAME}... robot (pid $isStart) already running"
+    fi
+}
+
 case "$1" in
     'start') app_start;;
     'stop') app_stop;;
+    'robot') app_robot;;
     'status') app_status;;
     'reload') 
         app_stop
