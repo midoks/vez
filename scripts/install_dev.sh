@@ -19,6 +19,7 @@ else
 	git pull https://github.com/midoks/${APP_NAME}
 fi
 
+rm -rf ./go.sum
 go mod tidy
 go mod vendor
 
