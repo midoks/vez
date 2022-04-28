@@ -76,7 +76,7 @@ main() {
 	fi
 
 	cp -rf $DOWNLOAD_FILE $TARGET_DIR/webp-server
-
+	chmod 755 $TARGET_DIR/webp-server
 
 	if [ ! -f "/usr/lib/systemd/system/webps.service" ];then
 		wget  -t2 -T15 -O "/usr/lib/systemd/system/webps.service" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
