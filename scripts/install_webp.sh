@@ -84,7 +84,7 @@ main() {
 
 
 	if [ ! -f "$TARGET_DIR/config.json" ];then
-		wget  -t2 -T15 -O "$TARGET_DIR/config.json" https://github.com/midoks/webp_server_go/blob/master/config.json
+		wget  -t2 -T15 -O "$TARGET_DIR/config.json" https://raw.githubusercontent.com/midoks/webp_server_go/master/config.json
 	fi
 
 	
