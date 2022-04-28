@@ -50,19 +50,22 @@ func Safe(original string) template.HTML {
 }
 
 func ParseHtml(original string) template.HTML {
-
-	fmt.Println("dd:", original)
+	prefix := "http://0.0.0.0:3333/i/"
+	if conf.Image.PingStatus {
+		prefix = conf.Image.Addr
+	}
+	// fmt.Println("dd:", original)
 
 	doc, _ := htmlquery.Parse(strings.NewReader(original))
 	imgList := htmlquery.Find(doc, "//img")
 	for _, img := range imgList {
 
 		imagePath := htmlquery.SelectAttr(img, "src")
-		fmt.Println("imagePath:", imagePath)
+		// fmt.Println("imagePath:", imagePath)
 
 		imagePathEncoded := base64.StdEncoding.EncodeToString([]byte(imagePath))
 
-		t := "http://0.0.0.0:3333/i/" + imagePathEncoded
+		t := prefix + imagePathEncoded
 		original = strings.Replace(original, imagePath, t, 1)
 	}
 
