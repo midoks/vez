@@ -7,6 +7,7 @@ import (
 
 	"github.com/qiniu/qmgo"
 	"github.com/qiniu/qmgo/operator"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Content struct {
@@ -64,21 +65,38 @@ func ContentOriginFindOne(source, id string) (result *Content, err error) {
 
 func ContentOriginFind() (result []Content, err error) {
 	var batch []Content
+	err = cliContent.Find(ctx, D{}).Sort("-_id").Limit(15).All(&batch)
+	return batch, err
+}
 
-	// matchStage := bson.D{{"$match", []bson.D{{"name", bson.D{{"$gt", 30}}}}}}
-	// groupStage := bson.D{{"$group", bson.D{{"_id", nil}, {"total", bson.D{{"$sum", "$age"}}}}}}
+func ContentOriginFindId(id string) (result []Content, err error) {
+	var batch []Content
 
-	// err = cliContent.Aggregate(ctx, qmgo.Pipeline{matchStage, groupStage}).All(&batch)
-	// fmt.Println(err, batch)
+	_id1, err := primitive.ObjectIDFromHex(id)
 
-	err = cliContent.Find(ctx, D{}).Sort("-createtime").Limit(15).All(&batch)
+	if err != nil {
+		return batch, err
+	}
 
-	// fmt.Println(err, batch)
+	opt := D{
+		{
+			operator.Lt,
+			D{
+				{
+					"_id",
+					_id1,
+				},
+			},
+		},
+	}
+
+	err = cliContent.Find(ctx, opt).Sort("-_id").Limit(15).All(&batch)
 	return batch, err
 }
 
 func ContentNewsest() ([]Content, error) {
 	var batch []Content
+
 	err = cliContent.Find(ctx, D{}).Sort("-createtime").Limit(5).All(&batch)
 	return batch, err
 }
