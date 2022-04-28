@@ -98,7 +98,10 @@ var (
 	}
 
 	Image struct {
-		Addr string
+		Addr         string
+		Ping         string
+		PingResponse string
+		PingStatus   bool
 	}
 
 	// Other settings

@@ -31,7 +31,7 @@ func main() { fmt.Println(runtime.GOARCH) }" > /tmp/go_arch.go
 }
 
 get_download_url() {
-	DOWNLOAD_URL="https://github.com/midoks/webp_server_go/releases/download/$VERSION/webp_server_go_${OS}_${ARCH}"
+	DOWNLOAD_URL="https://github.com/midoks/webp_server_go/releases/download/$VERSION/webp_server_${OS}_${ARCH}"
 }
 
 # download file

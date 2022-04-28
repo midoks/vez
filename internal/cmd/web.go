@@ -5,6 +5,8 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/urfave/cli"
 
@@ -16,6 +18,7 @@ import (
 	"github.com/midoks/vez/internal/context"
 	"github.com/midoks/vez/internal/router"
 	"github.com/midoks/vez/internal/tmpl"
+	"github.com/midoks/vez/internal/tools"
 
 	"github.com/midoks/vez/internal/assets/public"
 )
@@ -70,6 +73,27 @@ func setRouter(f *flamego.Flame) {
 
 func runWebService(c *cli.Context) error {
 
+	//check image server
+	go func() {
+		for {
+			pingUrl := conf.Image.Ping
+
+			if pingUrl != "" {
+				r, err := tools.GetHttpData(pingUrl)
+
+				if err != nil {
+					conf.Image.PingStatus = false
+				}
+
+				if strings.EqualFold(r, conf.Image.PingResponse) {
+					conf.Image.PingStatus = true
+				}
+			}
+			time.Sleep(time.Second * 5)
+		}
+	}()
+
+	// go tool pprof -http=:11112 --seconds 30 http://127.0.0.1:11012/debug/pprof/profile
 	if conf.App.RunMode != "prod" {
 		go func() {
 			port := ":" + conf.Debug.Port
