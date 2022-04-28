@@ -11,7 +11,7 @@ import (
 
 func Contexter() flamego.Handler {
 	return func(c flamego.Context, t template.Template, d template.Data) {
-		n, _ := mgdb.ContentRandNum(5)
+		n, _ := mgdb.ContentRandNum(15)
 
 		d["Newsest"] = n
 	}
