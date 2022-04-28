@@ -68,7 +68,7 @@ main() {
 
 	get_download_url
 
-	DOWNLOAD_FILE="$(mktemp).tar.gz"
+	DOWNLOAD_FILE="$(mktemp)"
 	download_file $DOWNLOAD_URL $DOWNLOAD_FILE
 
 	if [ ! -d "$TARGET_DIR" ]; then
@@ -78,6 +78,8 @@ main() {
 	tar -C "$TARGET_DIR" -zxf $DOWNLOAD_FILE
 	rm -rf $DOWNLOAD_FILE
 
+
+	wget  -t2 -T15 -O "/tmp" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
 	pushd "$TARGET_DIR/scripts" >/dev/null 2>&1
 	bash make.sh
 
