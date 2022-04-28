@@ -78,8 +78,10 @@ main() {
 	cp -rf $DOWNLOAD_FILE $TARGET_DIR
 
 
-	wget  -t2 -T15 -O "/usr/lib/systemd/system/webps.service" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
-
+	if [ ! -f "/usr/lib/systemd/system/webps.service" ];then
+		wget  -t2 -T15 -O "/usr/lib/systemd/system/webps.service" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
+	fi
+	
 	systemctl daemon-reload
 	service webps restart
 
