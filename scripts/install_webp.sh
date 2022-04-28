@@ -92,8 +92,7 @@ main() {
 	systemctl daemon-reload
 	service webps restart
 
-	cd .. && ./webp_server -v	
-	popd >/dev/null 2>&1
+	$TARGET_DIR/webp_server -v
 }
 
 main "$@" || exit 1
