@@ -12,7 +12,7 @@ load_vars() {
 
 	VERSION=$(get_latest_release "midoks/webp_server_go")
 
-	TARGET_DIR="/usr/local/webp_server_go"
+	TARGET_DIR="/opt/webps/webp-server"
 }
 
 get_latest_release() {
