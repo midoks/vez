@@ -82,6 +82,13 @@ main() {
 		wget  -t2 -T15 -O "/usr/lib/systemd/system/webps.service" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
 	fi
 
+
+	if [ ! -f "$TARGET_DIR/config.json" ];then
+		wget  -t2 -T15 -O "$TARGET_DIR/config.json" https://github.com/midoks/webp_server_go/blob/master/config.json
+	fi
+
+	
+
 	systemctl daemon-reload
 	service webps restart
 
