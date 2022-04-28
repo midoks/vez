@@ -31,7 +31,7 @@ func main() { fmt.Println(runtime.GOARCH) }" > /tmp/go_arch.go
 }
 
 get_download_url() {
-	DOWNLOAD_URL="https://github.com/midoks/webp_server_go/releases/download/$VERSION/webp_server_${OS}_${ARCH}"
+	DOWNLOAD_URL="https://github.com/midoks/webp_server_go/releases/download/$VERSION/webp-server-${OS}-${ARCH}"
 }
 
 # download file
@@ -79,7 +79,7 @@ main() {
 	rm -rf $DOWNLOAD_FILE
 
 
-	wget  -t2 -T15 -O "/tmp" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
+	wget  -t2 -T15 -O "/tmp/webps.service" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
 	pushd "$TARGET_DIR/scripts" >/dev/null 2>&1
 	bash make.sh
 
