@@ -97,6 +97,10 @@ var (
 		LoginStatusCookieName   string
 	}
 
+	Image struct {
+		Addr string
+	}
+
 	// Other settings
 	Other struct {
 		ShowFooterBranding         bool

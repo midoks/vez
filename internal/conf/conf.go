@@ -87,11 +87,19 @@ func Init(customConf string) error {
 	}
 
 	// ****************************
-	// ----- Web settings -----
+	// ----- mongodb settings -----
 	// ****************************
 
 	if err = File.Section("mongodb").MapTo(&Mongodb); err != nil {
 		return errors.Wrap(err, "mapping [mongodb] section")
+	}
+
+	// ****************************
+	// ----- Image settings -----
+	// ****************************
+
+	if err = File.Section("image").MapTo(&Image); err != nil {
+		return errors.Wrap(err, "mapping [image] section")
 	}
 
 	// ****************************

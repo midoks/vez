@@ -1,15 +1,17 @@
 package tmpl
 
 import (
-	// "fmt"
+	"fmt"
 	"html/template"
 	// "mime"
 	// "path/filepath"
-	// "strings"
+	"encoding/base64"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
+	"github.com/antchfx/htmlquery"
 	strip "github.com/grokify/html-strip-tags-go"
 
 	"github.com/microcosm-cc/bluemonday"
@@ -36,6 +38,7 @@ func FuncMaps() []template.FuncMap {
 			},
 			"HeadTitle": HeadTitle,
 			"Safe":      Safe,
+			"ParseHtml": ParseHtml,
 			"Sanitize":  bluemonday.UGCPolicy().Sanitize,
 		}}
 	})
@@ -43,6 +46,26 @@ func FuncMaps() []template.FuncMap {
 }
 
 func Safe(original string) template.HTML {
+	return template.HTML(original)
+}
+
+func ParseHtml(original string) template.HTML {
+
+	fmt.Println("dd:", original)
+
+	doc, _ := htmlquery.Parse(strings.NewReader(original))
+	imgList := htmlquery.Find(doc, "//img")
+	for _, img := range imgList {
+
+		imagePath := htmlquery.SelectAttr(img, "src")
+		fmt.Println("imagePath:", imagePath)
+
+		imagePathEncoded := base64.StdEncoding.EncodeToString([]byte(imagePath))
+
+		t := "http://0.0.0.0:3333/i/" + imagePathEncoded
+		original = strings.Replace(original, imagePath, t, 1)
+	}
+
 	return template.HTML(original)
 }
 
