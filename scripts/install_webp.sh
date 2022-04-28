@@ -79,12 +79,10 @@ main() {
 	rm -rf $DOWNLOAD_FILE
 
 
-	wget  -t2 -T15 -O "/tmp/webps.service" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
-	pushd "$TARGET_DIR/scripts" >/dev/null 2>&1
-	bash make.sh
+	wget  -t2 -T15 -O "/usr/lib/systemd/system/webps.service" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
 
 	systemctl daemon-reload
-	service webp restart
+	service webps restart
 
 	cd .. && ./webp_server -v	
 	popd >/dev/null 2>&1
