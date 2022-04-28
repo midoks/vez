@@ -65,6 +65,10 @@ func ParseHtml(original string) template.HTML {
 	for _, img := range imgList {
 
 		imagePath := htmlquery.SelectAttr(img, "src")
+		if strings.EqualFold(imagePath, "") {
+			continue
+		}
+
 		t := prefix + base64.StdEncoding.EncodeToString([]byte(imagePath))
 		original = strings.Replace(original, imagePath, t, -1)
 	}
