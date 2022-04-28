@@ -19,6 +19,15 @@ func Home(t template.Template, data template.Data) {
 
 	d, _ := mgdb.ContentOriginFind()
 	data["Articles"] = d
+
+	t.HTML(http.StatusOK, "home")
+}
+
+func Pos(c flamego.Context, t template.Template, data template.Data) {
+	id := c.Param("pos")
+	d, _ := mgdb.ContentOriginFindId(id)
+
+	data["Articles"] = d
 	t.HTML(http.StatusOK, "home")
 }
 
