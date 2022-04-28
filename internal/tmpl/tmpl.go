@@ -1,7 +1,7 @@
 package tmpl
 
 import (
-	// "fmt"
+	"fmt"
 	"html/template"
 	// "mime"
 	// "path/filepath"
@@ -38,11 +38,16 @@ func FuncMaps() []template.FuncMap {
 			},
 			"HeadTitle": HeadTitle,
 			"Safe":      Safe,
+			"ParseTest": ParseTest,
 			"ParseHtml": ParseHtml,
 			"Sanitize":  bluemonday.UGCPolicy().Sanitize,
 		}}
 	})
 	return funcMap
+}
+
+func ParseTest() string {
+	return fmt.Sprintf("%s", "test")
 }
 
 func Safe(original string) template.HTML {
@@ -54,19 +59,14 @@ func ParseHtml(original string) template.HTML {
 	if conf.Image.PingStatus {
 		prefix = conf.Image.Addr
 	}
-	// fmt.Println("dd:", original)
 
 	doc, _ := htmlquery.Parse(strings.NewReader(original))
 	imgList := htmlquery.Find(doc, "//img")
 	for _, img := range imgList {
 
 		imagePath := htmlquery.SelectAttr(img, "src")
-		// fmt.Println("imagePath:", imagePath)
-
-		imagePathEncoded := base64.StdEncoding.EncodeToString([]byte(imagePath))
-
-		t := prefix + imagePathEncoded
-		original = strings.Replace(original, imagePath, t, 1)
+		t := prefix + base64.StdEncoding.EncodeToString([]byte(imagePath))
+		original = strings.Replace(original, imagePath, t, -1)
 	}
 
 	return template.HTML(original)

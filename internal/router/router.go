@@ -1,7 +1,7 @@
 package router
 
 import (
-	// "fmt"
+	"fmt"
 	"net/http"
 
 	"github.com/flamego/flamego"
@@ -12,7 +12,7 @@ import (
 )
 
 func Hello() string {
-	return "Hello world"
+	return fmt.Sprintf("%s", "Hello world")
 }
 
 func Home(t template.Template, data template.Data) {
