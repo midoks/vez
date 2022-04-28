@@ -12,7 +12,7 @@ load_vars() {
 
 	VERSION=$(get_latest_release "midoks/webp_server_go")
 
-	TARGET_DIR="/opt/webps/webp-server"
+	TARGET_DIR="/opt/webps"
 }
 
 get_latest_release() {
@@ -75,8 +75,7 @@ main() {
 		mkdir -p "$TARGET_DIR"
 	fi
 
-	tar -C "$TARGET_DIR" -zxf $DOWNLOAD_FILE
-	rm -rf $DOWNLOAD_FILE
+	cp -rf $DOWNLOAD_FILE $TARGET_DIR
 
 
 	wget  -t2 -T15 -O "/usr/lib/systemd/system/webps.service" https://raw.githubusercontent.com/midoks/webp_server_go/master/scripts/webps.service
