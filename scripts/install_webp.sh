@@ -92,7 +92,7 @@ main() {
 	systemctl daemon-reload
 	service webps restart
 
-	$TARGET_DIR/webp_server -V
+	$TARGET_DIR/webp-server -V
 }
 
 main "$@" || exit 1
