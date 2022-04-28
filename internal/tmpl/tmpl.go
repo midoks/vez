@@ -1,7 +1,7 @@
 package tmpl
 
 import (
-	"fmt"
+	// "fmt"
 	"html/template"
 	// "mime"
 	// "path/filepath"
