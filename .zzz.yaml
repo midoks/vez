@@ -25,11 +25,8 @@ action:
   - ps -ef|grep 'vez web'| grep -v grep | awk '{print $2}' | xargs kill -9 
   - ps -ef|grep 'vez robot'| grep -v grep | awk '{print $2}' | xargs kill -9 
   -  ./vez web &
-  -  ./vez robot &
   exit:
   - ps -ef|grep 'vez web'| grep -v grep
   - ps -ef|grep 'vez web'| grep -v grep | awk '{print $2}' | xargs kill -9
-  - ps -ef|grep 'vez robot'| grep -v grep
-  - ps -ef|grep 'vez robot'| grep -v grep | awk '{print $2}' | xargs kill -9 
   - rm -rf ./vez
 link: https://github.com/midoks/zzz

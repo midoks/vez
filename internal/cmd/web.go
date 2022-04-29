@@ -86,6 +86,7 @@ func runWebService(c *cli.Context) error {
 					conf.Image.PingStatus = false
 				}
 
+				// fmt.Println("..", r, conf.Image.PingResponse, conf.Image.PingStatus)
 				if strings.EqualFold(r, conf.Image.PingResponse) {
 					conf.Image.PingStatus = true
 				}

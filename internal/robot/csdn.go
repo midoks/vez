@@ -146,7 +146,7 @@ func RunCSDN() {
 
 	csdn := CreateCSDNCollector()
 
-	r, err := mgdb.ContentRand()
+	r, err := mgdb.ContentOneByOne(CSND_NAME)
 	if err == nil {
 		fmt.Println("rand visiting", r.Url)
 		csdn.Visit(r.Url)

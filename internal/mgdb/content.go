@@ -9,6 +9,8 @@ import (
 	"github.com/qiniu/qmgo"
 	"github.com/qiniu/qmgo/operator"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/midoks/vez/internal/tools"
 )
 
 type Content struct {
@@ -59,9 +61,9 @@ func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 	return nil, errors.New("mongo disconnected!")
 }
 
-func ContentOriginFindOne(source, id string) (result *Content, err error) {
-	one := &Content{}
-	err = cliContent.Find(ctx, M{"source": source, "id": id}).One(one)
+func ContentOriginFindOne(source, id string) (result Content, err error) {
+	one := Content{}
+	err = cliContent.Find(ctx, M{"source": source, "id": id}).One(&one)
 	return one, err
 }
 
@@ -157,6 +159,65 @@ func ContentRand() (result *Content, err error) {
 	}
 
 	err = cliContent.Aggregate(ctx, qmgo.Pipeline{randStage}).One(&one)
+	return one, err
+}
+
+func ContentOneByOne(source string) (result Content, err error) {
+	one := Content{}
+	opt := M{"source": M{operator.Eq: source}}
+	filePath := "/tmp/vez.txt"
+
+	if tools.IsExist(filePath) {
+		c, err := tools.ReadFile(filePath)
+		if err != nil {
+			return one, err
+		}
+
+		if strings.EqualFold(c, "") {
+			goto ContentOneByOneGoto
+		}
+
+		_idObj, err := primitive.ObjectIDFromHex(c)
+		if err != nil {
+			return one, err
+		}
+
+		opt["_id"] = M{operator.Gt: _idObj}
+	}
+
+ContentOneByOneGoto:
+
+	one, err = ContentFindSourceLimit(source, 3)
+	if err != nil {
+		return one, fmt.Errorf("mongodb find error: %s", err)
+	}
+
+	err = tools.WriteFile(filePath, string(one.MgID))
+	if err != nil {
+		return one, fmt.Errorf("writeFile error: %s", err)
+	}
+	return one, nil
+}
+
+func ContentFindSourceLimit(source string, limit ...int) (result Content, err error) {
+	one := Content{}
+	opt := M{"source": M{operator.Eq: source}}
+
+	var bLimit int
+	if len(limit) > 0 {
+		bLimit = limit[0]
+	} else {
+		bLimit = 3
+	}
+
+	for i := 0; i < bLimit; i++ {
+		err = cliContent.Find(ctx, opt).Skip(int64(i)).Sort("+_id").Limit(1).One(&one)
+
+		if !strings.EqualFold(one.MgID, "") {
+			return one, err
+		}
+
+	}
 	return one, err
 }
 
