@@ -20,6 +20,11 @@ func Home(t template.Template, data template.Data) {
 	d, _ := mgdb.ContentOriginFind()
 	data["Articles"] = d
 
+	dLen := len(d)
+	if dLen > 0 {
+		data["NextPos"] = d[dLen-1].MgID
+	}
+
 	t.HTML(http.StatusOK, "home")
 }
 

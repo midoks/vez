@@ -11,6 +11,7 @@ import (
 )
 
 type Content struct {
+	MgID       string    `bson:"_id"`
 	Url        string    `bson:"url"`
 	Source     string    `bson:"source"`
 	User       string    `bson:"user"`
@@ -80,7 +81,7 @@ func ContentOriginFindId(id string) (result []Content, err error) {
 
 	opt := D{
 		{
-			operator.Lt,
+			operator.Gt,
 			D{
 				{
 					"_id",
@@ -90,7 +91,7 @@ func ContentOriginFindId(id string) (result []Content, err error) {
 		},
 	}
 
-	err = cliContent.Find(ctx, opt).Sort("-_id").Limit(15).All(&batch)
+	err = cliContent.Find(ctx, opt).Limit(15).All(&batch)
 	return batch, err
 }
 
