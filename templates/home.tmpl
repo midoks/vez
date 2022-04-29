@@ -24,10 +24,13 @@
 
 			<nav aria-label="Page navigation example">
 			  	<ul class="pagination justify-content-center">
-			    	<li class="page-item"><a class="page-link">上一页</a></li>
+
+			  		{{if .PrePos}}
+			    	<li class="page-item"><a class="page-link" href="/pre/{{.PrePos}}">上一页</a></li>
+			    	{{end}}
 
 			    	{{if .NextPos}}
-			    	<li class="page-item"><a class="page-link" href="/pos/{{.NextPos}}">下一页</a></li>
+			    	<li class="page-item"><a class="page-link" href="/next/{{.NextPos}}">下一页</a></li>
 			    	{{end}}
 			  	</ul>
 			</nav>

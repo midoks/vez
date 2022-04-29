@@ -2,7 +2,8 @@ package mgdb
 
 import (
 	"errors"
-	// "fmt"
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/qiniu/qmgo"
@@ -64,34 +65,72 @@ func ContentOriginFindOne(source, id string) (result *Content, err error) {
 	return one, err
 }
 
-func ContentOriginFind() (result []Content, err error) {
+func ContentOriginFind(limit ...int64) (result []Content, err error) {
 	var batch []Content
-	err = cliContent.Find(ctx, D{}).Sort("-_id").Limit(15).All(&batch)
+
+	var bNum int64
+	if len(limit) > 0 {
+		bNum = limit[0]
+	} else {
+		bNum = 15
+	}
+	err = cliContent.Find(ctx, D{}).Sort("-_id").Limit(bNum).All(&batch)
 	return batch, err
 }
 
-func ContentOriginFindId(id string) (result []Content, err error) {
+func ContentOriginFindId(id, sort string, limit ...int64) (result []Content, err error) {
 	var batch []Content
 
-	_id1, err := primitive.ObjectIDFromHex(id)
+	var bNum int64
+	if len(limit) > 0 {
+		bNum = limit[0]
+	} else {
+		bNum = 15
+	}
+
+	sortField := fmt.Sprintf("%s_id", sort)
+
+	if strings.EqualFold(id, "") {
+		err = cliContent.Find(ctx, D{}).Sort(sortField).Limit(bNum).All(&batch)
+		return batch, err
+	}
+
+	_idObj, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
 		return batch, err
 	}
 
-	opt := D{
-		{
-			operator.Gt,
-			D{
-				{
-					"_id",
-					_id1,
-				},
-			},
-		},
+	opt := M{"_id": M{operator.Lt: _idObj}}
+	err = cliContent.Find(ctx, opt).Sort(sortField).Limit(bNum).All(&batch)
+	return batch, err
+}
+
+func ContentOriginFindIdGt(id, sort string, limit ...int64) (result []Content, err error) {
+	var batch []Content
+
+	var bNum int64
+	if len(limit) > 0 {
+		bNum = limit[0]
+	} else {
+		bNum = 15
 	}
 
-	err = cliContent.Find(ctx, opt).Limit(15).All(&batch)
+	sortField := fmt.Sprintf("%s_id", sort)
+
+	if strings.EqualFold(id, "") {
+		err = cliContent.Find(ctx, D{}).Sort(sortField).Limit(bNum).All(&batch)
+		return batch, err
+	}
+
+	_idObj, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return batch, err
+	}
+
+	opt := M{"_id": M{operator.Gt: _idObj}}
+	err = cliContent.Find(ctx, opt).Sort(sortField).Limit(bNum).All(&batch)
 	return batch, err
 }
 

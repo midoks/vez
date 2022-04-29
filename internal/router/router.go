@@ -11,28 +11,58 @@ import (
 	"github.com/midoks/vez/internal/robot"
 )
 
+const PAGE_NUM = 15
+
 func Hello() string {
 	return fmt.Sprintf("%s", "Hello world")
 }
 
 func Home(t template.Template, data template.Data) {
 
-	d, _ := mgdb.ContentOriginFind()
+	d, _ := mgdb.ContentOriginFindId("", "-", PAGE_NUM)
 	data["Articles"] = d
 
 	dLen := len(d)
-	if dLen > 0 {
+	if dLen > 1 {
 		data["NextPos"] = d[dLen-1].MgID
 	}
 
 	t.HTML(http.StatusOK, "home")
 }
 
-func Pos(c flamego.Context, t template.Template, data template.Data) {
+func Pre(c flamego.Context, t template.Template, data template.Data) {
 	id := c.Param("pos")
-	d, _ := mgdb.ContentOriginFindId(id)
+	d, _ := mgdb.ContentOriginFindIdGt(id, "-", PAGE_NUM)
 
 	data["Articles"] = d
+
+	dLen := len(d)
+
+	if dLen == 0 {
+		c.Redirect("/")
+		return
+	}
+
+	if dLen > 1 {
+		data["PrePos"] = d[0].MgID
+		data["NextPos"] = d[dLen-1].MgID
+	}
+
+	t.HTML(http.StatusOK, "home")
+}
+
+func Next(c flamego.Context, t template.Template, data template.Data) {
+	id := c.Param("pos")
+	d, _ := mgdb.ContentOriginFindId(id, "-", PAGE_NUM)
+
+	data["Articles"] = d
+
+	dLen := len(d)
+	if dLen > 1 {
+		data["PrePos"] = d[0].MgID
+		data["NextPos"] = d[dLen-1].MgID
+	}
+
 	t.HTML(http.StatusOK, "home")
 }
 

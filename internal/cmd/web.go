@@ -63,7 +63,8 @@ func setRouter(f *flamego.Flame) {
 
 	f.Group("", func() {
 		f.Get("/", router.Home)
-		f.Get("/pos/{pos}", router.Pos)
+		f.Get("/pre/{pos}", router.Pre)
+		f.Get("/next/{pos}", router.Next)
 		f.Get("/rand", router.Rand)
 		f.Get("/about", router.About)
 		f.Get("/csdn/{user}/{id}.html", router.CsdnPageCotent)
