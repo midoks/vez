@@ -34,7 +34,7 @@ func ContentAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 		err = cliContent.Find(ctx, M{"source": data.Source, "id": data.Id}).One(&one)
 
 		if err == nil {
-			fmt.Println("mgid up:", data.MgID)
+			fmt.Println("mgid up:", one.MgID)
 			one.Updatetime = time.Now()
 			err = cliContent.UpdateOne(ctx, M{"source": data.Source, "id": data.Id}, one)
 			return nil, err
