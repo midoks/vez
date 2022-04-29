@@ -34,6 +34,7 @@ func ContentAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 		err = cliContent.Find(ctx, M{"source": data.Source, "id": data.Id}).One(&one)
 
 		if err == nil {
+			fmt.Println("mgid up:", data.MgID)
 			one.Updatetime = time.Now()
 			err = cliContent.UpdateOne(ctx, M{"source": data.Source, "id": data.Id}, one)
 			return nil, err
@@ -51,6 +52,8 @@ func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 		data.Updatetime = time.Now()
 		data.Createtime = time.Now()
 		data.MgID = primitive.NewObjectID().Hex()
+
+		fmt.Println("mgid add:", data.MgID)
 
 		result, err = collection.InsertOne(ctx, data)
 		if err != nil {
@@ -151,6 +154,25 @@ func ContentNewsest() ([]Content, error) {
 }
 
 func ContentRand() (result Content, err error) {
+	one := Content{}
+
+	randStage := D{
+		{
+			operator.Sample,
+			D{
+				{
+					"size",
+					1,
+				},
+			},
+		},
+	}
+
+	err = cliContent.Aggregate(ctx, qmgo.Pipeline{randStage}).One(&one)
+	return one, err
+}
+
+func ContentRandSource(source string) (result Content, err error) {
 	one := Content{}
 
 	randStage := D{
