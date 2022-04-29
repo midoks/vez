@@ -118,10 +118,9 @@ func CreateCSDNCollector() *colly.Collector {
 			}
 
 			title := htmlquery.OutputHTML(contentTitle[0], false)
-
 			html := htmlquery.OutputHTML(contentBody[0], false)
 
-			r, err := mgdb.ContentAdd(mgdb.Content{
+			mgdb.ContentAdd(mgdb.Content{
 				Url:    url,
 				Source: CSND_NAME,
 				User:   user,
@@ -129,8 +128,6 @@ func CreateCSDNCollector() *colly.Collector {
 				Title:  title,
 				Html:   html,
 			})
-
-			fmt.Println(r, err)
 		}
 	})
 	return csdn
@@ -146,11 +143,12 @@ func SpiderCSDNUrl(url string) {
 
 func RunCSDN() {
 
-	dStart, _ := mgdb.ContentOriginFindNewsestOne(CSND_NAME)
+	// dStart, _ := mgdb.ContentOriginFindNewsestOne(CSND_NAME)
 
 	csdn := CreateCSDNCollector()
 
-	r, err := mgdb.ContentOneByOne(CSND_NAME)
+	// r, err := mgdb.ContentOneByOne(CSND_NAME)
+	r, err := mgdb.ContentRand()
 	if err == nil {
 		fmt.Println("rand visiting: ", r.Url)
 		csdn.Visit(r.Url)
@@ -162,12 +160,12 @@ func RunCSDN() {
 
 	csdn.Wait()
 
-	dEnd, _ := mgdb.ContentOriginFindNewsestOne(CSND_NAME)
+	// dEnd, _ := mgdb.ContentOriginFindNewsestOne(CSND_NAME)
 
-	if dEnd.MgID == dStart.MgID {
-		fmt.Println("visiting restart")
-		csdn.Visit("https://blog.csdn.net")
-		csdn.Wait()
-	}
+	// if dEnd.MgID == dStart.MgID {
+	// 	fmt.Println("visiting restart")
+	// 	csdn.Visit("https://blog.csdn.net")
+	// 	csdn.Wait()
+	// }
 
 }

@@ -150,8 +150,8 @@ func ContentNewsest() ([]Content, error) {
 	return batch, err
 }
 
-func ContentRand() (result *Content, err error) {
-	one := &Content{}
+func ContentRand() (result Content, err error) {
+	one := Content{}
 
 	randStage := D{
 		{
@@ -206,19 +206,20 @@ ContentOneByOneGoto:
 	return one, nil
 }
 
-func ContentFindSourceLimit(source string, limit ...int) (result Content, err error) {
+func ContentFindSourceLimit(source string, limit ...int64) (result Content, err error) {
 	one := Content{}
 	opt := M{"source": M{operator.Eq: source}}
 
-	var bLimit int
+	var bLimit int64
 	if len(limit) > 0 {
 		bLimit = limit[0]
 	} else {
 		bLimit = 3
 	}
 
-	for i := 0; i < bLimit; i++ {
-		err = cliContent.Find(ctx, opt).Skip(int64(i)).Sort("+_id").Limit(1).One(&one)
+	var i int64
+	for i = 0; i < bLimit; i++ {
+		err = cliContent.Find(ctx, opt).Skip(i).Sort("+_id").Limit(1).One(&one)
 
 		if !strings.EqualFold(one.MgID, "") {
 			return one, err
