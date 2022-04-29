@@ -89,7 +89,7 @@ func runWebService(c *cli.Context) error {
 					conf.Image.PingStatus = true
 				}
 			}
-			time.Sleep(time.Second * 5)
+			time.Sleep(time.Second * 25)
 		}
 	}()
 
