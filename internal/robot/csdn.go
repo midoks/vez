@@ -80,7 +80,6 @@ func CreateCSDNCollector() *colly.Collector {
 
 	csdn.OnRequest(func(r *colly.Request) {
 		r.Headers.Set("User-Agent", RandomString())
-		// fmt.Println("Visiting", r.URL)
 	})
 
 	// Set error handler
@@ -144,17 +143,28 @@ func SpiderCSDNUrl(url string) {
 
 func RunCSDN() {
 
+	dStart, _ := mgdb.ContentOriginFindNewsestOne(CSND_NAME)
+
 	csdn := CreateCSDNCollector()
 
 	r, err := mgdb.ContentOneByOne(CSND_NAME)
 	if err == nil {
-		fmt.Println("rand visiting", r.Url)
+		fmt.Println("rand visiting: ", r.Url)
 		csdn.Visit(r.Url)
 		// csdn.Visit("https://blog.csdn.net/weixin_42219690/article/details/100935314")
 	} else {
-		fmt.Println("visiting root")
+		fmt.Println("visiting start")
 		csdn.Visit("https://blog.csdn.net")
 	}
 
 	csdn.Wait()
+
+	dEnd, _ := mgdb.ContentOriginFindNewsestOne(CSND_NAME)
+
+	if dEnd.MgID == dStart.MgID {
+		fmt.Println("visiting restart")
+		csdn.Visit("https://blog.csdn.net")
+		csdn.Wait()
+	}
+
 }

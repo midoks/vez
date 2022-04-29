@@ -67,6 +67,12 @@ func ContentOriginFindOne(source, id string) (result Content, err error) {
 	return one, err
 }
 
+func ContentOriginFindNewsestOne(source string) (result Content, err error) {
+	one := Content{}
+	err = cliContent.Find(ctx, M{"source": source}).Sort("-_id").One(&one)
+	return one, err
+}
+
 func ContentOriginFind(limit ...int64) (result []Content, err error) {
 	var batch []Content
 

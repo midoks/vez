@@ -36,13 +36,14 @@ var _hmt = _hmt || [];
 
 {{if .Article}}
 <title>{{.Article.Title|HeadTitle}} - 悦读</title>
+<meta name="keywords" content="{{.Article.Title|HeadTitle}},悦读">
+<meta name="description" content="{{.Html | HeadTitle}},悦读">
 {{else}}
 <title>悦读</title>
-{{end}}
-
-
 <meta name="keywords" content="悦读">
 <meta name="description" content="悦读">
+{{end}}
+
 
 <meta http-equiv="x-dns-prefetch-control" content="on">
 <link rel="dns-prefetch" href="//image.cachecha.com">
