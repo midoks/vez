@@ -50,7 +50,7 @@ func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 		data.Length = len(data.Html)
 		data.Updatetime = time.Now()
 		data.Createtime = time.Now()
-		data.MgID = primitive.NewObjectID()
+		data.MgID = primitive.NewObjectID().Hex()
 
 		result, err = collection.InsertOne(ctx, data)
 		if err != nil {
