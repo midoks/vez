@@ -150,6 +150,7 @@ func RunCSDN() {
 	if err == nil {
 		fmt.Println("rand visiting", r.Url)
 		csdn.Visit(r.Url)
+		// csdn.Visit("https://blog.csdn.net/weixin_42219690/article/details/100935314")
 	} else {
 		fmt.Println("visiting root")
 		csdn.Visit("https://blog.csdn.net")
