@@ -78,6 +78,7 @@ func ParseHtml(original string) template.HTML {
 
 func HeadTitle(original string) string {
 	stripped := strip.StripTags(original)
+	stripped = strings.Trim(stripped)
 	strippedRune := []rune(stripped)
 	sublen := 100
 	orilen := len(strippedRune)
