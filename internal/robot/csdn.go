@@ -120,7 +120,8 @@ func CreateCSDNCollector() *colly.Collector {
 			title := htmlquery.OutputHTML(contentTitle[0], false)
 
 			html := htmlquery.OutputHTML(contentBody[0], false)
-			mgdb.ContentAdd(mgdb.Content{
+
+			r, err := mgdb.ContentAdd(mgdb.Content{
 				Url:    url,
 				Source: CSND_NAME,
 				User:   user,
@@ -128,6 +129,8 @@ func CreateCSDNCollector() *colly.Collector {
 				Title:  title,
 				Html:   html,
 			})
+
+			fmt.Println(r, err)
 		}
 	})
 	return csdn
