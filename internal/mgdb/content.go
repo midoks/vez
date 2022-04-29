@@ -34,8 +34,8 @@ func ContentAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 		err = cliContent.Find(ctx, M{"source": data.Source, "id": data.Id}).One(&one)
 
 		if err == nil {
-			data.Updatetime = time.Now()
-			err = cliContent.UpdateOne(ctx, M{"source": data.Source, "id": data.Id}, data)
+			one.Updatetime = time.Now()
+			err = cliContent.UpdateOne(ctx, M{"source": data.Source, "id": data.Id}, one)
 			return nil, err
 		}
 
@@ -50,6 +50,7 @@ func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 		data.Length = len(data.Html)
 		data.Updatetime = time.Now()
 		data.Createtime = time.Now()
+		data.MgID = primitive.NewObjectID()
 
 		result, err = collection.InsertOne(ctx, data)
 		if err != nil {
