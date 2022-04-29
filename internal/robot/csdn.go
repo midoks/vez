@@ -47,7 +47,7 @@ func RandomString() string {
 func CreateCSDNCollector() *colly.Collector {
 	csdn := colly.NewCollector(
 		colly.Async(true),
-		colly.MaxDepth(2),
+		colly.MaxDepth(3),
 		// Attach a debugger to the collector
 		// colly.Debugger(&debug.LogDebugger{}),
 	)
