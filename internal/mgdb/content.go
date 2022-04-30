@@ -143,8 +143,6 @@ func ContentOriginFindId(id, sort string, limit ...int64) (result []ContentBid, 
 	sortField := fmt.Sprintf("%s_id", sort)
 	if strings.EqualFold(id, "") {
 		err = cliContent.Find(ctx, D{}).Sort(sortField).Limit(bNum).All(&batch)
-
-		fmt.Println(sortField, batch, err)
 		return batch, err
 	}
 
