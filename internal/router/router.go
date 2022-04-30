@@ -3,6 +3,7 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/flamego/flamego"
 	"github.com/flamego/template"
@@ -33,12 +34,18 @@ func Home(t template.Template, data template.Data) {
 
 func So(c flamego.Context, t template.Template, data template.Data) {
 	kw := c.Param("kw")
+	prevNext := c.Param("prevNext")
 	id := c.Param("pos")
 
-	data["Keyword"] = kw
+	op := operator.Lt
+	if strings.EqualFold(prevNext, "prev") {
+		op = operator.Gt
+	}
 
-	d, _ := mgdb.ContentOriginFindSoso(id, "-", operator.Lt, kw, PAGE_NUM)
+	d, _ := mgdb.ContentOriginFindSoso(id, "-", op, kw, PAGE_NUM)
+
 	data["Articles"] = d
+	data["Keyword"] = kw
 
 	dLen := len(d)
 	if dLen > 1 {
