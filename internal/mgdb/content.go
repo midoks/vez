@@ -186,7 +186,9 @@ func ContentRandSource(source string) (result Content, err error) {
 		},
 	}
 
-	err = cliContent.Aggregate(ctx, qmgo.Pipeline{randStage}).One(&one)
+	matchStage := D{{"$match", []E{{"source", D{{operator.Eq, source}}}}}}
+
+	err = cliContent.Aggregate(ctx, qmgo.Pipeline{matchStage, randStage}).One(&one)
 	return one, err
 }
 
@@ -201,10 +203,10 @@ func ContentOneByOne(source string) (result Content, err error) {
 			return one, err
 		}
 
-		if strings.EqualFold(c, "") {
+		if strings.EqualFold(strings.TrimSpace(c), "") {
+
 			goto ContentOneByOneGoto
 		}
-
 		_idObj, err := primitive.ObjectIDFromHex(c)
 		if err != nil {
 			return one, err
@@ -241,11 +243,9 @@ func ContentFindSourceLimit(source string, limit ...int64) (result Content, err 
 	var i int64
 	for i = 0; i < bLimit; i++ {
 		err = cliContent.Find(ctx, opt).Skip(i).Sort("+_id").Limit(1).One(&one)
-
-		if !strings.EqualFold(one.MgID, "") {
+		if !strings.EqualFold(strings.TrimSpace(one.MgID), "") {
 			return one, err
 		}
-
 	}
 	return one, err
 }
