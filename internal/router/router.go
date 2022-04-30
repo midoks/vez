@@ -6,6 +6,7 @@ import (
 
 	"github.com/flamego/flamego"
 	"github.com/flamego/template"
+	"github.com/qiniu/qmgo/operator"
 
 	"github.com/midoks/vez/internal/mgdb"
 	"github.com/midoks/vez/internal/robot"
@@ -34,7 +35,13 @@ func So(c flamego.Context, t template.Template, data template.Data) {
 	kw := c.Param("kw")
 	id := c.Param("pos")
 
+	data["Keyword"] = kw
+
+	d, _ := mgdb.ContentOriginFindSoso("", "-", operator.Lt, kw, PAGE_NUM)
+	data["Articles"] = d
+
 	fmt.Println(kw, id)
+	t.HTML(http.StatusOK, "home")
 }
 
 func Pre(c flamego.Context, t template.Template, data template.Data) {

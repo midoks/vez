@@ -26,5 +26,19 @@ hljs.initHighlightingOnLoad();
 $('table').bootstrapTable({});
 </script>
 
+<script>
+$('.x-search').submit(function(e){
+    e.preventDefault();
+    var kw = $('.x-kw').val();
+    if(!kw){
+        $('.x-kw').focus();
+        return false;
+    }
+    var url = '/so/' + encodeURIComponent(kw) + '.html';
+    window.location = url;
+    return false;
+});
+</script>
+
 </body>
 </html>

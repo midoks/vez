@@ -101,7 +101,7 @@ func ContentOriginFind(limit ...int64) (result []ContentBid, err error) {
 	return batch, err
 }
 
-func ContentOriginFindSoso(id, sort, so string, limit ...int64) (result []ContentBid, err error) {
+func ContentOriginFindSoso(id, sort, op, keyword string, limit ...int64) (result []ContentBid, err error) {
 	var batch []ContentBid
 
 	var bNum int64
@@ -112,17 +112,20 @@ func ContentOriginFindSoso(id, sort, so string, limit ...int64) (result []Conten
 	}
 
 	sortField := fmt.Sprintf("%s_id", sort)
-	if strings.EqualFold(id, "") {
-		err = cliContent.Find(ctx, D{}).Sort(sortField).Limit(bNum).All(&batch)
-		return batch, err
+
+	opt := M{}
+	if !strings.EqualFold(id, "") {
+		mgId, err := primitive.ObjectIDFromHex(id)
+		if err != nil {
+			return batch, err
+		}
+		opt["_id"] = M{op: mgId}
 	}
 
-	mgId, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return batch, err
+	if !strings.EqualFold(keyword, "") {
+		opt["title"] = M{operator.Regex: keyword, "$options": "im"}
 	}
 
-	opt := M{"_id": M{operator.Lt: mgId}}
 	err = cliContent.Find(ctx, opt).Sort(sortField).Limit(bNum).All(&batch)
 	return batch, err
 }
