@@ -37,11 +37,18 @@ func So(c flamego.Context, t template.Template, data template.Data) {
 
 	data["Keyword"] = kw
 
-	d, _ := mgdb.ContentOriginFindSoso("", "-", operator.Lt, kw, PAGE_NUM)
+	d, _ := mgdb.ContentOriginFindSoso(id, "-", operator.Lt, kw, PAGE_NUM)
 	data["Articles"] = d
 
-	fmt.Println(kw, id)
-	t.HTML(http.StatusOK, "home")
+	dLen := len(d)
+	if dLen > 1 {
+		data["PrePos"] = d[0].MgID
+		if dLen == PAGE_NUM {
+			data["NextPos"] = d[dLen-1].MgID
+		}
+	}
+
+	t.HTML(http.StatusOK, "soso")
 }
 
 func Pre(c flamego.Context, t template.Template, data template.Data) {

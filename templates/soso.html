@@ -1,0 +1,47 @@
+{{template "base/header" .}}
+
+
+<div class="container">
+{{/* start */}}
+
+<div class="row g-5">
+  <div class="col-md-8">   
+     	<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: auto;">
+
+	    <div class="list-group list-group-flush border-bottom scrollarea">
+	    	{{range .Articles}}
+	      <a href="/{{.Source}}/{{.User}}/{{.Id}}.html" class="list-group-item list-group-item-action py-3 lh-tight" aria-current="true">
+	        <div class="d-flex w-100 align-items-center justify-content-between">
+	          <strong class="mb-1">{{.Title | Safe}}</strong>
+	        </div>
+	        <div class="col-10 mb-1 small">{{.Html | HeadTitle}}</div>
+	      </a>
+	      {{end}}
+	    </div>
+	  
+			</div>
+			<div class="mb-3"></div>
+
+			<nav aria-label="Page navigation example">
+			  	<ul class="pagination justify-content-center">
+
+			  		{{if .PrePos}}
+			    	<li class="page-item"><a class="page-link" href="/so/{{.Keyword}}/pre/{{.PrePos}}.html">上一页</a></li>
+			    	{{end}}
+
+			    	{{if .NextPos}}
+			    	<li class="page-item"><a class="page-link" href="/so/{{.Keyword}}/next/{{.NextPos}}.html">下一页</a></li>
+			    	{{end}}
+			  	</ul>
+			</nav>
+  </div>
+
+  <div class="col-md-4">
+    {{template "sidebar/sidebar" .}}
+  </div>
+</div>
+
+{{/* end */}}
+</div>
+
+{{template "base/footer" .}}
