@@ -8,6 +8,7 @@ import (
 	"gopkg.in/ini.v1"
 
 	"github.com/midoks/vez/internal/conf"
+	"github.com/midoks/vez/internal/context"
 	"github.com/midoks/vez/internal/logs"
 	"github.com/midoks/vez/internal/mgdb"
 	"github.com/midoks/vez/internal/tools"
@@ -68,6 +69,7 @@ func Init(customConf string) error {
 	conf.Init(customConf)
 	logs.Init()
 	mgdb.Init()
+	context.InitMG()
 
 	return nil
 }
