@@ -151,8 +151,8 @@ func RunCSDN() {
 	r, err := mgdb.ContentRand()
 	if err == nil {
 		fmt.Println("rand visiting: ", r.Url)
-		csdn.Visit(r.Url)
-		// csdn.Visit("https://blog.csdn.net/weixin_42219690/article/details/100935314")
+		// csdn.Visit(r.Url)
+		csdn.Visit("https://blog.csdn.net/suguoliang/article/details/123956701")
 	} else {
 		fmt.Println("visiting start")
 		csdn.Visit("https://blog.csdn.net")

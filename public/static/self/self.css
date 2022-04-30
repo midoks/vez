@@ -125,6 +125,12 @@ h1, h2, h3, h4, h5, h6 {
   color: #727272;
 }
 
+article .table-box {
+    overflow-x: auto;
+    margin-bottom: 24px;
+}
+
+
 /*
  * Footer
  */

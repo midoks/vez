@@ -1,7 +1,7 @@
 package mgdb
 
 import (
-	"errors"
+	// "errors"
 	"fmt"
 	"strings"
 	"time"
@@ -27,42 +27,36 @@ type Content struct {
 }
 
 func ContentAdd(data Content) (result *qmgo.InsertOneResult, err error) {
-	if collection != nil {
-		data.Length = len(data.Html)
 
-		one := Content{}
-		err = cliContent.Find(ctx, M{"source": data.Source, "id": data.Id}).One(&one)
+	data.Length = len(data.Html)
 
-		if err == nil {
-			fmt.Println("mgid up:", one.MgID)
-			one.Updatetime = time.Now()
-			err = cliContent.UpdateOne(ctx, M{"source": data.Source, "id": data.Id}, one)
-			return nil, err
-		}
+	one := Content{}
+	err = cliContent.Find(ctx, M{"source": data.Source, "id": data.Id}).One(&one)
 
-		return ContentOriginAdd(data)
+	if err == nil {
+		fmt.Println("mgid up:", one.MgID)
+		one.Updatetime = time.Now()
+		err = cliContent.UpdateOne(ctx, M{"source": data.Source, "id": data.Id}, one)
+		return nil, err
 	}
 
-	return nil, errors.New("mongo disconnected!")
+	return ContentOriginAdd(data)
 }
 
 func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
-	if collection != nil {
-		data.Length = len(data.Html)
-		data.Updatetime = time.Now()
-		data.Createtime = time.Now()
-		data.MgID = primitive.NewObjectID().Hex()
 
-		fmt.Println("mgid add:", data.MgID)
+	data.Length = len(data.Html)
+	data.Updatetime = time.Now()
+	data.Createtime = time.Now()
+	data.MgID = primitive.NewObjectID().Hex()
 
-		result, err = collection.InsertOne(ctx, data)
-		if err != nil {
-			return nil, err
-		}
-		return result, err
+	fmt.Println("mgid add:", data.MgID)
+
+	result, err = collection.InsertOne(ctx, data)
+	if err != nil {
+		return nil, err
 	}
-
-	return nil, errors.New("mongo disconnected!")
+	return result, err
 }
 
 func ContentOriginFindOne(source, id string) (result Content, err error) {
