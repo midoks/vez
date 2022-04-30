@@ -33,14 +33,21 @@ func ContentAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 	one := Content{}
 	err = cliContent.Find(ctx, M{"source": data.Source, "id": data.Id}).One(&one)
 
-	if err == nil {
-		fmt.Println("mgid up:", one.MgID)
-		one.Updatetime = time.Now()
-		err = cliContent.UpdateOne(ctx, M{"source": data.Source, "id": data.Id}, one)
-		return nil, err
+	if err != nil {
+		return ContentOriginAdd(data)
 	}
 
-	return ContentOriginAdd(data)
+	oneData := M{"$set": M{
+		"title":      one.Title,
+		"html":       one.Html,
+		"updatetime": time.Now(),
+	}}
+
+	err = cliContent.UpdateOne(ctx, M{"source": data.Source, "id": data.Id}, oneData)
+	if err != nil {
+		return nil, fmt.Errorf("content update error: %v", err)
+	}
+	return nil, nil
 }
 
 func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
@@ -50,13 +57,11 @@ func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 	data.Createtime = time.Now()
 	data.MgID = primitive.NewObjectID().Hex()
 
-	fmt.Println("mgid add:", data.MgID)
-
 	result, err = collection.InsertOne(ctx, data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("add error: %T", err)
 	}
-	return result, err
+	return result, nil
 }
 
 func ContentOriginFindOne(source, id string) (result Content, err error) {

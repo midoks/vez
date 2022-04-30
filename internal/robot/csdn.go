@@ -120,7 +120,7 @@ func CreateCSDNCollector() *colly.Collector {
 			title := htmlquery.OutputHTML(contentTitle[0], false)
 			html := htmlquery.OutputHTML(contentBody[0], false)
 
-			mgdb.ContentAdd(mgdb.Content{
+			_, err = mgdb.ContentAdd(mgdb.Content{
 				Url:    url,
 				Source: CSND_NAME,
 				User:   user,
@@ -128,6 +128,9 @@ func CreateCSDNCollector() *colly.Collector {
 				Title:  title,
 				Html:   html,
 			})
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	})
 	return csdn
@@ -151,8 +154,8 @@ func RunCSDN() {
 	r, err := mgdb.ContentRand()
 	if err == nil {
 		fmt.Println("rand visiting: ", r.Url)
-		// csdn.Visit(r.Url)
-		csdn.Visit("https://blog.csdn.net/suguoliang/article/details/123956701")
+		// csdn.Visit("https://blog.csdn.net/suguoliang/article/details/123956701")
+		csdn.Visit(r.Url)
 	} else {
 		fmt.Println("visiting start")
 		csdn.Visit("https://blog.csdn.net")
