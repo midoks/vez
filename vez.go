@@ -7,15 +7,16 @@ import (
 	"github.com/urfave/cli"
 
 	"github.com/midoks/vez/internal/cmd"
+	"github.com/midoks/vez/internal/conf"
 )
 
 const Version = "0.0.1"
 const AppName = "vez"
 
-// func init() {
-// 	conf.App.Version = Version
-// 	conf.App.Name = AppName
-// }
+func init() {
+	conf.App.Version = Version
+	conf.App.Name = AppName
+}
 
 func main() {
 

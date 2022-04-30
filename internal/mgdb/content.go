@@ -217,12 +217,12 @@ ContentOneByOneGoto:
 
 	one, err = ContentFindSourceLimit(source, 3)
 	if err != nil {
-		return one, fmt.Errorf("mongodb find error: %s", err)
+		return one, fmt.Errorf("mongodb find error: %v", err)
 	}
 
 	err = tools.WriteFile(filePath, string(one.MgID))
 	if err != nil {
-		return one, fmt.Errorf("writeFile error: %s", err)
+		return one, fmt.Errorf("write file error: %v", err)
 	}
 	return one, nil
 }

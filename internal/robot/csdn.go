@@ -150,8 +150,8 @@ func RunCSDN() {
 
 	csdn := CreateCSDNCollector()
 
-	// r, err := mgdb.ContentOneByOne(CSND_NAME)
-	r, err := mgdb.ContentRand()
+	r, err := mgdb.ContentOneByOne(CSND_NAME)
+	// r, err := mgdb.ContentRand()
 	if err == nil {
 		fmt.Println("rand visiting: ", r.Url)
 		// csdn.Visit("https://blog.csdn.net/suguoliang/article/details/123956701")
