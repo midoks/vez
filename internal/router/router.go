@@ -55,11 +55,11 @@ func So(c flamego.Context, t template.Template, data template.Data) {
 		}
 
 		if strings.EqualFold(prevNext, "prev") && dLen != PAGE_NUM {
-			c.Redirect("/")
+			c.Redirect("/so/" + kw + ".html")
 		}
 
 		if strings.EqualFold(prevNext, "next") && dLen == 0 {
-			c.Redirect("/")
+			c.Redirect("/so/" + kw + ".html")
 		}
 
 	}
