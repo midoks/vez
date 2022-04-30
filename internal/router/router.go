@@ -53,6 +53,11 @@ func So(c flamego.Context, t template.Template, data template.Data) {
 		if dLen == PAGE_NUM {
 			data["NextPos"] = d[dLen-1].MgID
 		}
+
+		if strings.EqualFold(prevNext, "prev") && dLen != PAGE_NUM {
+			c.Redirect("/")
+		}
+
 	}
 
 	t.HTML(http.StatusOK, "soso")
