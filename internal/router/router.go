@@ -30,6 +30,13 @@ func Home(t template.Template, data template.Data) {
 	t.HTML(http.StatusOK, "home")
 }
 
+func So(c flamego.Context, t template.Template, data template.Data) {
+	kw := c.Param("kw")
+	id := c.Param("pos")
+
+	fmt.Println(kw, id)
+}
+
 func Pre(c flamego.Context, t template.Template, data template.Data) {
 	id := c.Param("pos")
 	d, _ := mgdb.ContentOriginFindIdGt(id, "-", PAGE_NUM)
@@ -37,8 +44,7 @@ func Pre(c flamego.Context, t template.Template, data template.Data) {
 	data["Articles"] = d
 
 	dLen := len(d)
-
-	if dLen == 0 {
+	if dLen != PAGE_NUM {
 		c.Redirect("/")
 		return
 	}
@@ -53,14 +59,16 @@ func Pre(c flamego.Context, t template.Template, data template.Data) {
 
 func Next(c flamego.Context, t template.Template, data template.Data) {
 	id := c.Param("pos")
-	d, _ := mgdb.ContentOriginFindId(id, "-", PAGE_NUM)
 
+	d, _ := mgdb.ContentOriginFindId(id, "-", PAGE_NUM)
 	data["Articles"] = d
 
 	dLen := len(d)
 	if dLen > 1 {
 		data["PrePos"] = d[0].MgID
-		data["NextPos"] = d[dLen-1].MgID
+		if dLen == PAGE_NUM {
+			data["NextPos"] = d[dLen-1].MgID
+		}
 	}
 
 	t.HTML(http.StatusOK, "home")

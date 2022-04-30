@@ -14,7 +14,6 @@ import (
 )
 
 type Content struct {
-	MgID       string    `bson:"_id"`
 	Url        string    `bson:"url"`
 	Source     string    `bson:"source"`
 	User       string    `bson:"user"`
@@ -24,6 +23,20 @@ type Content struct {
 	Length     int       `bson:"length"`
 	Updatetime time.Time `bson:"updatetime" json:"updatetime"`
 	Createtime time.Time `bson:"createtime" json:"createtime"`
+}
+
+type ContentBid struct {
+	Url        string    `bson:"url"`
+	Source     string    `bson:"source"`
+	User       string    `bson:"user"`
+	Id         string    `bson:"id"`
+	Title      string    `bson:"title"`
+	Html       string    `bson:"html"`
+	Length     int       `bson:"length"`
+	Updatetime time.Time `bson:"updatetime" json:"updatetime"`
+	Createtime time.Time `bson:"createtime" json:"createtime"`
+
+	MgID string `bson:"_id"`
 }
 
 func ContentAdd(data Content) (result *qmgo.InsertOneResult, err error) {
@@ -55,7 +68,6 @@ func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 	data.Length = len(data.Html)
 	data.Updatetime = time.Now()
 	data.Createtime = time.Now()
-	data.MgID = primitive.NewObjectID().Hex()
 
 	result, err = collection.InsertOne(ctx, data)
 	if err != nil {
@@ -64,20 +76,20 @@ func ContentOriginAdd(data Content) (result *qmgo.InsertOneResult, err error) {
 	return result, nil
 }
 
-func ContentOriginFindOne(source, id string) (result Content, err error) {
-	one := Content{}
+func ContentOriginFindOne(source, id string) (result ContentBid, err error) {
+	one := ContentBid{}
 	err = cliContent.Find(ctx, M{"source": source, "id": id}).One(&one)
 	return one, err
 }
 
-func ContentOriginFindNewsestOne(source string) (result Content, err error) {
-	one := Content{}
+func ContentOriginFindNewsestOne(source string) (result ContentBid, err error) {
+	one := ContentBid{}
 	err = cliContent.Find(ctx, M{"source": source}).Sort("-_id").One(&one)
 	return one, err
 }
 
-func ContentOriginFind(limit ...int64) (result []Content, err error) {
-	var batch []Content
+func ContentOriginFind(limit ...int64) (result []ContentBid, err error) {
+	var batch []ContentBid
 
 	var bNum int64
 	if len(limit) > 0 {
@@ -89,8 +101,8 @@ func ContentOriginFind(limit ...int64) (result []Content, err error) {
 	return batch, err
 }
 
-func ContentOriginFindId(id, sort string, limit ...int64) (result []Content, err error) {
-	var batch []Content
+func ContentOriginFindSoso(id, sort, so string, limit ...int64) (result []ContentBid, err error) {
+	var batch []ContentBid
 
 	var bNum int64
 	if len(limit) > 0 {
@@ -100,25 +112,23 @@ func ContentOriginFindId(id, sort string, limit ...int64) (result []Content, err
 	}
 
 	sortField := fmt.Sprintf("%s_id", sort)
-
 	if strings.EqualFold(id, "") {
 		err = cliContent.Find(ctx, D{}).Sort(sortField).Limit(bNum).All(&batch)
 		return batch, err
 	}
 
-	_idObj, err := primitive.ObjectIDFromHex(id)
-
+	mgId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return batch, err
 	}
 
-	opt := M{"_id": M{operator.Lt: _idObj}}
+	opt := M{"_id": M{operator.Lt: mgId}}
 	err = cliContent.Find(ctx, opt).Sort(sortField).Limit(bNum).All(&batch)
 	return batch, err
 }
 
-func ContentOriginFindIdGt(id, sort string, limit ...int64) (result []Content, err error) {
-	var batch []Content
+func ContentOriginFindId(id, sort string, limit ...int64) (result []ContentBid, err error) {
+	var batch []ContentBid
 
 	var bNum int64
 	if len(limit) > 0 {
@@ -128,7 +138,34 @@ func ContentOriginFindIdGt(id, sort string, limit ...int64) (result []Content, e
 	}
 
 	sortField := fmt.Sprintf("%s_id", sort)
+	if strings.EqualFold(id, "") {
+		err = cliContent.Find(ctx, D{}).Sort(sortField).Limit(bNum).All(&batch)
 
+		fmt.Println(sortField, batch, err)
+		return batch, err
+	}
+
+	mgId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return batch, err
+	}
+
+	opt := M{"_id": M{operator.Lt: mgId}}
+	err = cliContent.Find(ctx, opt).Sort(sortField).Limit(bNum).All(&batch)
+	return batch, err
+}
+
+func ContentOriginFindIdGt(id, sort string, limit ...int64) (result []ContentBid, err error) {
+	var batch []ContentBid
+
+	var bNum int64
+	if len(limit) > 0 {
+		bNum = limit[0]
+	} else {
+		bNum = 15
+	}
+
+	sortField := fmt.Sprintf("%s_id", sort)
 	if strings.EqualFold(id, "") {
 		err = cliContent.Find(ctx, D{}).Sort(sortField).Limit(bNum).All(&batch)
 		return batch, err
@@ -145,15 +182,15 @@ func ContentOriginFindIdGt(id, sort string, limit ...int64) (result []Content, e
 	return batch, err
 }
 
-func ContentNewsest() ([]Content, error) {
-	var batch []Content
+func ContentNewsest() ([]ContentBid, error) {
+	var batch []ContentBid
 
 	err = cliContent.Find(ctx, D{}).Sort("-createtime").Limit(5).All(&batch)
 	return batch, err
 }
 
-func ContentRand() (result Content, err error) {
-	one := Content{}
+func ContentRand() (result ContentBid, err error) {
+	one := ContentBid{}
 
 	randStage := D{
 		{
@@ -171,17 +208,14 @@ func ContentRand() (result Content, err error) {
 	return one, err
 }
 
-func ContentRandSource(source string) (result Content, err error) {
-	one := Content{}
+func ContentRandSource(source string) (result ContentBid, err error) {
+	one := ContentBid{}
 
 	randStage := D{
 		{
 			operator.Sample,
 			D{
-				{
-					"size",
-					1,
-				},
+				{"size", 1},
 			},
 		},
 	}
@@ -192,8 +226,8 @@ func ContentRandSource(source string) (result Content, err error) {
 	return one, err
 }
 
-func ContentOneByOne(source string) (result Content, err error) {
-	one := Content{}
+func ContentOneByOne(source string) (result ContentBid, err error) {
+	one := ContentBid{}
 	opt := M{"source": M{operator.Eq: source}}
 	filePath := "/tmp/vez.txt"
 
@@ -229,8 +263,8 @@ ContentOneByOneGoto:
 	return one, nil
 }
 
-func ContentFindSourceLimit(source string, limit ...int64) (result Content, err error) {
-	one := Content{}
+func ContentFindSourceLimit(source string, limit ...int64) (result ContentBid, err error) {
+	one := ContentBid{}
 	opt := M{"source": M{operator.Eq: source}}
 
 	var bLimit int64
@@ -250,8 +284,8 @@ func ContentFindSourceLimit(source string, limit ...int64) (result Content, err 
 	return one, err
 }
 
-func ContentRandNum(num int64) ([]Content, error) {
-	var batch []Content
+func ContentRandNum(num int64) ([]ContentBid, error) {
+	var batch []ContentBid
 
 	randStage := D{
 		{
