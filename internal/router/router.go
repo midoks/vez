@@ -67,7 +67,7 @@ func So(c flamego.Context, t template.Template, data template.Data) {
 	t.HTML(http.StatusOK, "soso")
 }
 
-func Pre(c flamego.Context, t template.Template, data template.Data) {
+func Prev(c flamego.Context, t template.Template, data template.Data) {
 	id := c.Param("pos")
 	d, _ := mgdb.ContentOriginFindIdGt(id, "-", PAGE_NUM)
 
