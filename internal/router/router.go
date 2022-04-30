@@ -58,6 +58,10 @@ func So(c flamego.Context, t template.Template, data template.Data) {
 			c.Redirect("/")
 		}
 
+		if strings.EqualFold(prevNext, "next") && dLen == 0 {
+			c.Redirect("/")
+		}
+
 	}
 
 	t.HTML(http.StatusOK, "soso")
