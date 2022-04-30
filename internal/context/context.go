@@ -17,7 +17,7 @@ func InitMG() {
 	go func() {
 		for {
 			mg, _ = mgdb.ContentRandNum(10)
-			time.Sleep(time.Second * 30)
+			time.Sleep(time.Second * 300)
 		}
 	}()
 
