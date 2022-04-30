@@ -48,20 +48,20 @@ func So(c flamego.Context, t template.Template, data template.Data) {
 	data["Keyword"] = kw
 
 	dLen := len(d)
+
+	if strings.EqualFold(prevNext, "prev") && dLen != PAGE_NUM {
+		c.Redirect("/so/" + kw + ".html")
+	}
+
+	if strings.EqualFold(prevNext, "next") && dLen == 0 {
+		c.Redirect("/so/" + kw + ".html")
+	}
+
 	if dLen > 1 {
 		data["PrePos"] = d[0].MgID
 		if dLen == PAGE_NUM {
 			data["NextPos"] = d[dLen-1].MgID
 		}
-
-		if strings.EqualFold(prevNext, "prev") && dLen != PAGE_NUM {
-			c.Redirect("/so/" + kw + ".html")
-		}
-
-		if strings.EqualFold(prevNext, "next") && dLen == 0 {
-			c.Redirect("/so/" + kw + ".html")
-		}
-
 	}
 
 	t.HTML(http.StatusOK, "soso")
