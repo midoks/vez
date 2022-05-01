@@ -12,7 +12,6 @@ import (
 
 	"github.com/midoks/vez/internal/lazyregexp"
 	"github.com/midoks/vez/internal/mgdb"
-	// "github.com/gocolly/colly/v2/debug"
 )
 
 const (
@@ -62,19 +61,19 @@ func CreateCSDNCollector() *colly.Collector {
 	csdn.OnHTML("a", func(e *colly.HTMLElement) {
 		url := e.Attr("href")
 
-		if isMatchCSDN_Article(url) {
+		if !isMatchCSDN_Article(url) {
+			return
+		}
 
-			user, id := getMatchCSDN_User_ID(url)
-			if user == "" {
-				return
-			}
+		user, id := getMatchCSDN_User_ID(url)
+		if user == "" {
+			return
+		}
 
-			_, err := mgdb.ContentOriginFindOne(CSND_NAME, id)
-			if err != nil {
-				e.Request.Visit(url)
-				return
-			}
-			// fmt.Println("repeat", url)
+		_, err := mgdb.ContentOriginFindOne(CSND_NAME, id)
+		if err != nil {
+			e.Request.Visit(url)
+			return
 		}
 	})
 
@@ -99,17 +98,17 @@ func CreateCSDNCollector() *colly.Collector {
 				return
 			}
 
+			user, id := getMatchCSDN_User_ID(url)
+			if user == "" {
+				return
+			}
+
 			contentBody := htmlquery.Find(doc, `//div[@id="article_content"]/div`)
 			if len(contentBody) == 0 {
 				contentBody = htmlquery.Find(doc, `//div[@id="content_views"]/div`)
 				if len(contentBody) == 0 {
 					return
 				}
-			}
-
-			user, id := getMatchCSDN_User_ID(url)
-			if user == "" {
-				return
 			}
 
 			contentTitle := htmlquery.Find(doc, `//h1[@id="articleContentId"]`)
@@ -146,29 +145,15 @@ func SpiderCSDNUrl(url string) {
 
 func RunCSDN() {
 
-	// dStart, _ := mgdb.ContentOriginFindNewsestOne(CSND_NAME)
-
-	csdn := CreateCSDNCollector()
-
-	// r, err := mgdb.ContentOneByOne(CSND_NAME)
+	app := CreateCSDNCollector()
 	r, err := mgdb.ContentRandSource(CSND_NAME)
 	if err == nil {
 		fmt.Println("rand visiting: ", r.Url)
-		// csdn.Visit("https://blog.csdn.net/suguoliang/article/details/123956701")
-		csdn.Visit(r.Url)
+		app.Visit(r.Url)
 	} else {
 		fmt.Println("visiting start")
-		csdn.Visit("https://blog.csdn.net")
+		app.Visit("https://blog.csdn.net")
 	}
 
-	csdn.Wait()
-
-	// dEnd, _ := mgdb.ContentOriginFindNewsestOne(CSND_NAME)
-
-	// if dEnd.MgID == dStart.MgID {
-	// 	fmt.Println("visiting restart")
-	// 	csdn.Visit("https://blog.csdn.net")
-	// 	csdn.Wait()
-	// }
-
+	app.Wait()
 }

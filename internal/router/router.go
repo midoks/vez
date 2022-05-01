@@ -121,11 +121,13 @@ func About(c flamego.Context, t template.Template, data template.Data) {
 }
 
 func CsdnPageCotent(c flamego.Context, t template.Template, data template.Data) {
-
-	// url := "https://blog.csdn.net/" + c.Param("user") + "/article/details/" + c.Param("id")
-	// robot.SpiderCSDNUrl(url)
-
 	d, _ := mgdb.ContentOriginFindOne(robot.CSND_NAME, c.Param("id"))
+	data["Article"] = d
+	t.HTML(http.StatusOK, "page/content")
+}
+
+func CnBlogsPageCotent(c flamego.Context, t template.Template, data template.Data) {
+	d, _ := mgdb.ContentOriginFindOne(robot.CNBLOGS_NAME, c.Param("id"))
 	data["Article"] = d
 	t.HTML(http.StatusOK, "page/content")
 }

@@ -71,6 +71,7 @@ func setRouter(f *flamego.Flame) {
 		f.Get("/so/{kw}.html", router.So)
 		f.Get("/so/{kw}/{prevNext}/{pos}.html", router.So)
 		f.Get("/csdn/{user}/{id}.html", router.CsdnPageCotent)
+		f.Get("/cnblogs/{user}/{id}.html", router.CnBlogsPageCotent)
 	}, context.Contexter())
 
 }

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"time"
+
 	"github.com/urfave/cli"
 
 	"github.com/midoks/vez/internal/robot"
@@ -17,6 +19,12 @@ var Robot = cli.Command{
 }
 
 func runRobotService(c *cli.Context) error {
+
 	robot.RunCSDN()
+
+	time.Sleep(time.Second * 60)
+
+	robot.RunCnBlogs()
+
 	return nil
 }
