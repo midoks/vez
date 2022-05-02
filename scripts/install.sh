@@ -12,9 +12,9 @@ check_go_environment() {
 load_vars() {
 	OS=$(uname | tr '[:upper:]' '[:lower:]')
 
-	VERSION=$(get_latest_release "midoks/{$APP_NAME}")
+	VERSION=$(get_latest_release "midoks/$APP_NAME")
 
-	TARGET_DIR="/usr/local/{$APP_NAME}"
+	TARGET_DIR="/usr/local/$APP_NAME"
 }
 
 get_latest_release() {
@@ -33,7 +33,7 @@ func main() { fmt.Println(runtime.GOARCH) }" > /tmp/go_arch.go
 }
 
 get_download_url() {
-	DOWNLOAD_URL="https://github.com/midoks/{$APP_NAME}/releases/download/$VERSION/{$APP_NAME}_${VERSION}_${OS}_${ARCH}.tar.gz"
+	DOWNLOAD_URL="https://github.com/midoks/$APP_NAME/releases/download/$VERSION/$APP_NAME_${VERSION}_${OS}_${ARCH}.tar.gz"
 }
 
 # download file
@@ -44,9 +44,9 @@ download_file() {
     printf "Fetching ${url} \n\n"
 
     if test -x "$(command -v curl)"; then
-        code=$(curl --connect-timeout 15 -w '%{http_code}' -L "${url}" -o "${destination}")
+        code=$(curl --connect-timeout 15 -w '%{http_code}' -L "${url}" -o "$destination")
     elif test -x "$(command -v wget)"; then
-        code=$(wget -t2 -T15 -O "${destination}" --server-response "${url}" 2>&1 | awk '/^  HTTP/{print $2}' | tail -1)
+        code=$(wget -t2 -T15 -O "$destination" --server-response "${url}" 2>&1 | awk '/^  HTTP/{print $2}' | tail -1)
     else
         printf "\e[1;31mNeither curl nor wget was available to perform http requests.\e[0m\n"
         exit 1
@@ -84,9 +84,9 @@ main() {
 	bash make.sh
 
 	systemctl daemon-reload
-	service dagger restart
+	service vez restart
 
-	cd .. && ./dagger-server -v	
+	cd .. && ./vez -v	
 	popd >/dev/null 2>&1
 }
 
