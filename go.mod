@@ -17,7 +17,6 @@ require (
 	github.com/urfave/cli v1.22.5
 	go.mongodb.org/mongo-driver v1.9.0
 	gopkg.in/ini.v1 v1.66.4
-	gopkg.in/macaron.v1 v1.4.0
 )
 
 require (
@@ -30,7 +29,6 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/go-macaron/inject v0.0.0-20160627170012-d8a0b8677191 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
@@ -51,7 +49,6 @@ require (
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
-	github.com/unknwon/com v0.0.0-20190804042917-757f69c95f3e // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect

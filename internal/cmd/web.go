@@ -14,13 +14,13 @@ import (
 	"github.com/flamego/flamego"
 	"github.com/flamego/template"
 
+	"github.com/midoks/vez/internal/assets/public"
+	"github.com/midoks/vez/internal/assets/templates"
 	"github.com/midoks/vez/internal/conf"
 	"github.com/midoks/vez/internal/context"
 	"github.com/midoks/vez/internal/router"
 	"github.com/midoks/vez/internal/tmpl"
 	"github.com/midoks/vez/internal/tools"
-
-	"github.com/midoks/vez/internal/assets/public"
 )
 
 var Service = cli.Command{
@@ -37,6 +37,7 @@ func newFlamego() *flamego.Flame {
 
 	f := flamego.Classic()
 
+	// public
 	f.Use(flamego.Static(flamego.StaticOptions{Directory: filepath.Join(conf.CustomDir(), "public")}))
 
 	var publicFs http.FileSystem
@@ -50,11 +51,19 @@ func newFlamego() *flamego.Flame {
 		EnableLogging: false,
 	}))
 
-	f.Use(template.Templater(template.Options{
-		FuncMaps: tmpl.FuncMaps(),
-	}))
+	// template
+	renderOpt := template.Options{
+		Directory:         filepath.Join(conf.WorkDir(), "templates"),
+		AppendDirectories: []string{filepath.Join(conf.CustomDir(), "templates")},
+		FuncMaps:          tmpl.FuncMaps(),
+	}
 
-	// f.Use(template.Templater(template.Options{FileSystem: fs}))
+	if !conf.Web.LoadAssetsFromDisk {
+		renderOpt.FileSystem = templates.NewTemplateFileSystem("", renderOpt.AppendDirectories[0])
+	}
+
+	f.Use(template.Templater(renderOpt))
+
 	f.Use(brotli.Brotli())
 	return f
 }

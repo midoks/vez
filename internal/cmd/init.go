@@ -37,6 +37,10 @@ func autoMakeCustomConf(customConf string) error {
 	cfg.Section("mongodb").Key("addr").SetValue("127.0.0.1:27017")
 	cfg.Section("mongodb").Key("db").SetValue("vez")
 
+	cfg.Section("image").Key("addr").SetValue("http://0.0.0.0:3333/i/")
+	cfg.Section("image").Key("ping").SetValue("http://0.0.0.0:3333/ping")
+	cfg.Section("image").Key("ping_response").SetValue("ok")
+
 	cfg.Section("security").Key("install_lock").SetValue("true")
 	secretKey := tools.RandString(15)
 	cfg.Section("security").Key("secret_key").SetValue(secretKey)

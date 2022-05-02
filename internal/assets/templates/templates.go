@@ -12,40 +12,48 @@ import (
 	"path"
 	"strings"
 
-	"gopkg.in/macaron.v1"
-
+	"github.com/flamego/template"
 	"github.com/midoks/vez/internal/tools"
 )
 
 //go:generate go-bindata -nomemcopy -nometadata -ignore="\\.DS_Store" -pkg=templates -prefix=../../../templates -debug=false -o=templates_gen.go ../../../templates/...
 
-// fileSystem implements the macaron.TemplateFileSystem interface.
 type fileSystem struct {
-	files []macaron.TemplateFile
+	files []template.File
 }
 
-func (fs *fileSystem) ListFiles() []macaron.TemplateFile {
-	return fs.files
-}
+func (fs *fileSystem) Files() []template.File { return fs.files }
 
 func (fs *fileSystem) Get(name string) (io.Reader, error) {
 	for i := range fs.files {
 		if fs.files[i].Name()+fs.files[i].Ext() == name {
-			return bytes.NewReader(fs.files[i].Data()), nil
+			bReader, _ := fs.files[i].Data()
+			return bytes.NewReader(bReader), nil
 		}
 	}
 	return nil, fmt.Errorf("file %q not found", name)
 }
 
-// NewTemplateFileSystem returns a macaron.TemplateFileSystem instance for embedded assets.
+type file struct {
+	name string
+	data []byte
+	ext  string
+}
+
+func (f *file) Name() string          { return f.name }
+func (f *file) Data() ([]byte, error) { return f.data, nil }
+func (f *file) Ext() string           { return f.ext }
+
+// NewTemplateFileSystem returns a template.TemplateFileSystem instance for embedded assets.
 // The argument "dir" can be used to serve subset of embedded assets. Template file
 // found under the "customDir" on disk has higher precedence over embedded assets.
-func NewTemplateFileSystem(dir, customDir string) macaron.TemplateFileSystem {
+func NewTemplateFileSystem(dir, customDir string) template.FileSystem {
+
 	if dir != "" && !strings.HasSuffix(dir, "/") {
 		dir += "/"
 	}
 
-	var files []macaron.TemplateFile
+	var files []template.File
 	names := AssetNames()
 	for _, name := range names {
 		if !strings.HasPrefix(name, dir) {
@@ -62,13 +70,19 @@ func NewTemplateFileSystem(dir, customDir string) macaron.TemplateFileSystem {
 			data, err = Asset(name)
 		}
 		if err != nil {
-			panic(err)
+			continue
 		}
 
 		name = strings.TrimPrefix(name, dir)
 		ext := path.Ext(name)
 		name = strings.TrimSuffix(name, ext)
-		files = append(files, macaron.NewTplFile(name, data, ext))
+
+		// fmt.Println(name, data, ext)
+		files = append(files, &file{
+			name: name,
+			data: data,
+			ext:  ext,
+		})
 	}
 	return &fileSystem{files: files}
 }
