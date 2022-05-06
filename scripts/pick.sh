@@ -2,7 +2,7 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 
 
-VERSION=0.0.1
+VERSION=0.0.2
 curPath=`pwd`
 rootPath=$(dirname "$curPath")
 
@@ -116,7 +116,7 @@ build_app(){
 golist=`go tool dist list`
 echo $golist
 
-# build_app linux amd64
+build_app linux amd64
 # build_app linux 386
 # build_app linux arm64
 # build_app linux arm
