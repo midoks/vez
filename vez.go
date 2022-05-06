@@ -10,7 +10,7 @@ import (
 	"github.com/midoks/vez/internal/conf"
 )
 
-const Version = "0.0.1"
+const Version = "0.0.2"
 const AppName = "vez"
 
 func init() {

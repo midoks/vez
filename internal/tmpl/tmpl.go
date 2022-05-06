@@ -1,20 +1,20 @@
 package tmpl
 
 import (
+	"encoding/base64"
 	"fmt"
 	"html/template"
-	// "mime"
-	// "path/filepath"
-	"encoding/base64"
+	"net/url"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+	"unsafe"
 
 	"github.com/antchfx/htmlquery"
 	strip "github.com/grokify/html-strip-tags-go"
-
 	"github.com/microcosm-cc/bluemonday"
+
 	"github.com/midoks/vez/internal/conf"
 )
 
@@ -46,6 +46,18 @@ func FuncMaps() []template.FuncMap {
 	return funcMap
 }
 
+// Byte to string, only read-only
+func BytesToString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
+
+//String to byte, only read-only
+func StringToBytes(str string) []byte {
+	x := (*[2]uintptr)(unsafe.Pointer(&str))
+	b := [3]uintptr{x[0], x[1], x[1]}
+	return *(*[]byte)(unsafe.Pointer(&b))
+}
+
 func ParseTest() string {
 	return fmt.Sprintf("%s", "test")
 }
@@ -55,6 +67,7 @@ func Safe(original string) template.HTML {
 }
 
 func ParseHtml(original string) template.HTML {
+
 	if conf.Image.PingStatus {
 
 		prefix := conf.Image.Addr
@@ -68,7 +81,7 @@ func ParseHtml(original string) template.HTML {
 				continue
 			}
 
-			t := prefix + base64.StdEncoding.EncodeToString([]byte(imagePath))
+			t := prefix + url.QueryEscape(base64.StdEncoding.EncodeToString(StringToBytes(imagePath)))
 			original = strings.Replace(original, imagePath, t, -1)
 		}
 	}

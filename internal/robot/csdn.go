@@ -150,9 +150,11 @@ func RunCSDN() {
 	if err == nil {
 		fmt.Println("rand visiting: ", r.Url)
 		app.Visit(r.Url)
+		// app.Visit("https://blog.csdn.net/qinxian20120/article/details/105368864")
 	} else {
 		fmt.Println("visiting start")
 		app.Visit("https://blog.csdn.net")
+
 	}
 
 	app.Wait()

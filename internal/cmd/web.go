@@ -12,6 +12,7 @@ import (
 
 	"github.com/flamego/brotli"
 	"github.com/flamego/flamego"
+	"github.com/flamego/gzip"
 	"github.com/flamego/template"
 
 	"github.com/midoks/vez/internal/assets/public"
@@ -35,10 +36,27 @@ var Service = cli.Command{
 
 func newFlamego() *flamego.Flame {
 
-	f := flamego.Classic()
+	f := flamego.New()
+
+	if !conf.Web.DisableRouterLog {
+		f.Use(flamego.Logger())
+	}
+
+	f.Use(flamego.Recovery())
+
+	if conf.Web.EnableGzip {
+		f.Use(gzip.Gzip(gzip.Options{
+			CompressionLevel: 9, // 最优压缩
+		}))
+	}
+
+	f.Use(brotli.Brotli())
 
 	// public
-	f.Use(flamego.Static(flamego.StaticOptions{Directory: filepath.Join(conf.CustomDir(), "public")}))
+	f.Use(flamego.Static(flamego.StaticOptions{
+		Directory:     filepath.Join(conf.CustomDir(), "public"),
+		EnableLogging: !conf.Web.DisableRouterLog,
+	}))
 
 	var publicFs http.FileSystem
 	if !conf.Web.LoadAssetsFromDisk {
@@ -48,7 +66,7 @@ func newFlamego() *flamego.Flame {
 	f.Use(flamego.Static(flamego.StaticOptions{
 		Directory:     filepath.Join(conf.WorkDir(), "public"),
 		FileSystem:    publicFs,
-		EnableLogging: false,
+		EnableLogging: !conf.Web.DisableRouterLog,
 	}))
 
 	// template
@@ -64,7 +82,6 @@ func newFlamego() *flamego.Flame {
 
 	f.Use(template.Templater(renderOpt))
 
-	f.Use(brotli.Brotli())
 	return f
 }
 

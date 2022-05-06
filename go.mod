@@ -7,6 +7,7 @@ require (
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/flamego/brotli v1.0.1
 	github.com/flamego/flamego v1.2.0
+	github.com/flamego/gzip v1.0.1
 	github.com/flamego/template v1.0.0
 	github.com/gocolly/colly v1.2.0
 	github.com/grokify/html-strip-tags-go v0.0.1

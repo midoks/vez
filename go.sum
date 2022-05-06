@@ -39,6 +39,8 @@ github.com/flamego/flamego v1.0.0/go.mod h1:apiAxIxeHujHFX4Yr0BHmQFJuZUM07XztdQS
 github.com/flamego/flamego v1.1.0/go.mod h1:sMqWT2ONQkZsCHte/k8hYmfnbbLgnfv7lL+VJpfv+EU=
 github.com/flamego/flamego v1.2.0 h1:Hy0JOOLJcasqJQ1J1e8kmCxPJ2OqNYeRy8NgUDnntTY=
 github.com/flamego/flamego v1.2.0/go.mod h1:0LXdtkBqv4Gob5nQ/fhB25d5GH8/PW/bVpJRDDt+8VI=
+github.com/flamego/gzip v1.0.1 h1:BSezxpcpZU2ahxj662NC5+hO6TzUWk7ngRhaC/ueMc0=
+github.com/flamego/gzip v1.0.1/go.mod h1:tD4Itz7kyx5OvVZULSthVDS2RuIOJvzOTlHjTPIy4Xc=
 github.com/flamego/template v1.0.0 h1:geUpBq+j0L2Wp+AuAQ7QxpZedRwG/EeYFZJ4llkPmA4=
 github.com/flamego/template v1.0.0/go.mod h1:ZS9Li2amrupO/3sXS1LRNrAqAcxJI8lG1hhlDBZ4R2s=
 github.com/go-playground/assert/v2 v2.0.1 h1:MsBgLAaY856+nPRTKrp3/OZK38U/wa0CcBYNjji3q3A=

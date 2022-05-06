@@ -16,3 +16,4 @@ vendor
 vez
 custom
 tmp
+.*.sh
