@@ -98,6 +98,7 @@ func setRouter(f *flamego.Flame) {
 		f.Get("/so/{kw}/{prevNext}/{pos}.html", router.So)
 		f.Get("/csdn/{user}/{id}.html", router.CsdnPageCotent)
 		f.Get("/cnblogs/{user}/{id}.html", router.CnBlogsPageCotent)
+		f.Get("/image/{id}", router.Image)
 	}, context.Contexter())
 
 }
@@ -116,7 +117,7 @@ func runWebService(c *cli.Context) error {
 					conf.Image.PingStatus = false
 				}
 
-				// fmt.Println("..", r, conf.Image.PingResponse, conf.Image.PingStatus)
+				// fmt.Println("", r, conf.Image.PingResponse, conf.Image.PingStatus)
 				if strings.EqualFold(r, conf.Image.PingResponse) {
 					conf.Image.PingStatus = true
 				}

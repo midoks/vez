@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"encoding/base64"
 
 	"github.com/flamego/flamego"
 	"github.com/flamego/template"
 	"github.com/qiniu/qmgo/operator"
 
+
 	"github.com/midoks/vez/internal/mgdb"
+	"github.com/midoks/vez/internal/tmpl"
 	"github.com/midoks/vez/internal/robot"
 )
 
@@ -130,4 +133,21 @@ func CnBlogsPageCotent(c flamego.Context, t template.Template, data template.Dat
 	d, _ := mgdb.ContentOriginFindOne(robot.CNBLOGS_NAME, c.Param("id"))
 	data["Article"] = d
 	t.HTML(http.StatusOK, "page/content")
+}
+
+
+func Image(c flamego.Context, t template.Template, data template.Data) string {
+
+	url := c.Param("id")
+	decoded, err := base64.StdEncoding.DecodeString(url)
+
+	if err == nil {
+		fmt.Println(tmpl.BytesToString(decoded), err)
+		url = tmpl.BytesToString(decoded)
+
+
+
+
+	}
+	return url
 }
