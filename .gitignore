@@ -18,3 +18,4 @@ custom
 tmp
 .*.sh
 /upload
+/dist
