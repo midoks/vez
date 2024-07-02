@@ -191,7 +191,7 @@ func Image(c flamego.Context, t template.Template, data template.Data) string {
 		url = tmpl.BytesToString(decoded)
 
 		url_sign := tools.Md5(url)
-		fmt.Println(url_sign)
+		// fmt.Println(url_sign)
 		
 		content := getImageContent(url_sign)
 		if !strings.EqualFold(content, "") {
@@ -204,7 +204,7 @@ func Image(c flamego.Context, t template.Template, data template.Data) string {
 			return content
 		}
 
-		fmt.Println(url)
+		// fmt.Println(url)
 	}
 	return url
 }
