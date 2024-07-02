@@ -19,3 +19,4 @@ tmp
 .*.sh
 /upload
 /dist
+.DS_Store
