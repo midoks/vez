@@ -3,8 +3,10 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"encoding/base64"
+	"io/ioutil"
 
 	"github.com/flamego/flamego"
 	"github.com/flamego/template"
@@ -137,6 +139,48 @@ func CnBlogsPageCotent(c flamego.Context, t template.Template, data template.Dat
 }
 
 
+func splitImageUrlHeader(url_sign string) string{
+	dir := url_sign[0:1] + "/" + url_sign[1:1]
+	return dir
+}
+
+func getImageContent(url_sign string) string {
+	url_header := splitImageUrlHeader(url_sign)
+	define_dir := "upload/image/" + url_header 
+
+	abs_file := define_dir + "/" + url_sign
+
+
+	b, _ := tools.PathExists(define_dir)
+	if !b {
+		os.MkdirAll(define_dir, os.ModePerm)
+	}
+
+	b, _ = tools.PathExists(abs_file)
+	if !b {
+		return ""
+	} else {
+		bytes, _ := ioutil.ReadFile(abs_file)
+		return string(bytes)
+	}
+
+	return ""
+}
+
+func setImageContent(url_sign string, content string) {
+	url_header := splitImageUrlHeader(url_sign)
+	define_dir := "upload/image/" + url_header
+
+	abs_file := define_dir + "/" + url_sign
+
+	b, _ := tools.PathExists(define_dir)
+	if !b {
+		os.MkdirAll(define_dir, os.ModePerm)
+	}
+	os.WriteFile(abs_file, []byte(content), os.ModePerm)
+}
+
+
 func Image(c flamego.Context, t template.Template, data template.Data) string {
 
 	url := c.Param("id")
@@ -146,8 +190,17 @@ func Image(c flamego.Context, t template.Template, data template.Data) string {
 		// fmt.Println(tmpl.BytesToString(decoded), err)
 		url = tmpl.BytesToString(decoded)
 
+		url_sign := tools.Md5(url)
+		fmt.Println(url_sign)
+		
+		content := getImageContent(url_sign)
+		if !strings.EqualFold(content, "") {
+			return content
+		}
+	
 		content, err := tools.GetHttpData(url)
 		if err == nil {
+			setImageContent(url_sign, content)
 			return content
 		}
 

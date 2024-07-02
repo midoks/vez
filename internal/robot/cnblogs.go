@@ -91,7 +91,7 @@ func CreateCnBlogsCollector() *colly.Collector {
 		url := r.Request.URL.String()
 		if isMatchCnBlogs_Article(url) {
 
-			fmt.Println("match", url)
+			// fmt.Println("match", url)
 			doc, err := htmlquery.Parse(strings.NewReader(string(r.Body)))
 			if err != nil {
 				return

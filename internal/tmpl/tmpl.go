@@ -85,8 +85,7 @@ func ParseHtml(original string) template.HTML {
 
 			t := "/image/" + url.QueryEscape(base64.StdEncoding.EncodeToString(StringToBytes(imagePath)))
 			original = strings.Replace(original, imagePath, t, -1)
-
-			fmt.Println("image:",imagePath, t)
+			// fmt.Println("image:",imagePath, t)
 		}
 	// }
 
