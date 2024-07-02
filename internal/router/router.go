@@ -140,7 +140,7 @@ func CnBlogsPageCotent(c flamego.Context, t template.Template, data template.Dat
 
 
 func splitImageUrlHeader(url_sign string) string{
-	dir := url_sign[0:1] + "/" + url_sign[1:1]
+	dir := url_sign[0:1] + "/" + url_sign[1:2]
 	return dir
 }
 
@@ -150,6 +150,7 @@ func getImageContent(url_sign string) string {
 
 	abs_file := define_dir + "/" + url_sign
 
+	// fmt.Println(url_header, define_dir
 
 	b, _ := tools.PathExists(define_dir)
 	if !b {
