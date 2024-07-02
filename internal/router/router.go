@@ -14,6 +14,7 @@ import (
 	"github.com/midoks/vez/internal/mgdb"
 	"github.com/midoks/vez/internal/tmpl"
 	"github.com/midoks/vez/internal/robot"
+	"github.com/midoks/vez/internal/tools"
 )
 
 const PAGE_NUM = 15
@@ -142,12 +143,15 @@ func Image(c flamego.Context, t template.Template, data template.Data) string {
 	decoded, err := base64.StdEncoding.DecodeString(url)
 
 	if err == nil {
-		fmt.Println(tmpl.BytesToString(decoded), err)
+		// fmt.Println(tmpl.BytesToString(decoded), err)
 		url = tmpl.BytesToString(decoded)
 
+		content, err := tools.GetHttpData(url)
+		if err == nil {
+			return content
+		}
 
-
-
+		fmt.Println(url)
 	}
 	return url
 }
