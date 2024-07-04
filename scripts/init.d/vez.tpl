@@ -30,7 +30,7 @@ app_start(){
     isStart=`ps -ef|grep "$SERVICENAME web" |grep -v grep|awk '{print $2}'`
     if [ "$isStart" == '' ];then
         echo -e "Starting $SERVICENAME... \c"
-        cd $app_path && "${app_path}/$SERVICENAME web &"
+        cd $app_path && ${app_path}/$SERVICENAME web &
         isStart=""
         while [[ "$isStart" == "" ]];
         do
