@@ -190,7 +190,7 @@ func RandString(len int) string {
 	return BytesToString(bytes)
 }
 
-//String to byte, only read-only
+// String to byte, only read-only
 func StringToBytes(str string) []byte {
 	x := (*[2]uintptr)(unsafe.Pointer(&str))
 	b := [3]uintptr{x[0], x[1], x[1]}
@@ -361,12 +361,13 @@ func ToEditorLang(lang string) string {
 // underscore format.
 //
 // Some samples.
-//     "FirstName"  => "first_name"
-//     "HTTPServer" => "http_server"
-//     "NoHTTPS"    => "no_https"
-//     "GO_PATH"    => "go_path"
-//     "GO PATH"    => "go_path"      // space is converted to underscore.
-//     "GO-PATH"    => "go_path"      // hyphen is converted to underscore.
+//
+//	"FirstName"  => "first_name"
+//	"HTTPServer" => "http_server"
+//	"NoHTTPS"    => "no_https"
+//	"GO_PATH"    => "go_path"
+//	"GO PATH"    => "go_path"      // space is converted to underscore.
+//	"GO-PATH"    => "go_path"      // hyphen is converted to underscore.
 //
 // From https://github.com/huandu/xstrings
 func ToSnakeCase(str string) string {

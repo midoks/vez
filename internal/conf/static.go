@@ -98,6 +98,7 @@ var (
 	}
 
 	Image struct {
+		Status       bool
 		Addr         string
 		Ping         string
 		PingResponse string

@@ -51,7 +51,7 @@ func BytesToString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-//String to byte, only read-only
+// String to byte, only read-only
 func StringToBytes(str string) []byte {
 	x := (*[2]uintptr)(unsafe.Pointer(&str))
 	b := [3]uintptr{x[0], x[1], x[1]}
@@ -67,27 +67,30 @@ func Safe(original string) template.HTML {
 }
 
 func ParseHtml(original string) template.HTML {
+	doc, _ := htmlquery.Parse(strings.NewReader(original))
+	imgList := htmlquery.Find(doc, "//img")
 
-	// if conf.Image.PingStatus {
+	for _, img := range imgList {
 
-		// prefix := conf.Image.Addr
-
-		doc, _ := htmlquery.Parse(strings.NewReader(original))
-		imgList := htmlquery.Find(doc, "//img")
-
-		for _, img := range imgList {
-
-			imagePath := htmlquery.SelectAttr(img, "src")
-			if strings.EqualFold(imagePath, "") {
-				continue
-			}
-			
-
-			t := "/image/" + url.QueryEscape(base64.StdEncoding.EncodeToString(StringToBytes(imagePath)))
-			original = strings.Replace(original, imagePath, t, -1)
-			// fmt.Println("image:",imagePath, t)
+		imagePath := htmlquery.SelectAttr(img, "src")
+		if strings.EqualFold(imagePath, "") {
+			continue
 		}
-	// }
+
+		image_status := conf.Image.Status
+
+		imagePath = strings.Trim(imagePath, " ")
+
+		suffix := url.QueryEscape(base64.StdEncoding.EncodeToString(StringToBytes(imagePath)))
+		t := ""
+		if image_status {
+			t = conf.Image.Addr + "/" + suffix
+		} else {
+			t = "/image/" + suffix
+		}
+		original = strings.Replace(original, imagePath, t, -1)
+		// fmt.Println("image:", imagePath, t, suffix)
+	}
 
 	return template.HTML(original)
 }

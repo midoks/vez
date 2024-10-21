@@ -1,21 +1,20 @@
 package router
 
 import (
+	"encoding/base64"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
-	"encoding/base64"
-	"io/ioutil"
 
 	"github.com/flamego/flamego"
 	"github.com/flamego/template"
 	"github.com/qiniu/qmgo/operator"
 
-
 	"github.com/midoks/vez/internal/mgdb"
-	"github.com/midoks/vez/internal/tmpl"
 	"github.com/midoks/vez/internal/robot"
+	"github.com/midoks/vez/internal/tmpl"
 	"github.com/midoks/vez/internal/tools"
 )
 
@@ -138,15 +137,14 @@ func CnBlogsPageCotent(c flamego.Context, t template.Template, data template.Dat
 	t.HTML(http.StatusOK, "page/content")
 }
 
-
-func splitImageUrlHeader(url_sign string) string{
+func splitImageUrlHeader(url_sign string) string {
 	dir := url_sign[0:1] + "/" + url_sign[1:2]
 	return dir
 }
 
 func getImageContent(url_sign string) string {
 	url_header := splitImageUrlHeader(url_sign)
-	define_dir := "upload/image/" + url_header 
+	define_dir := "upload/image/" + url_header
 
 	abs_file := define_dir + "/" + url_sign
 
@@ -181,7 +179,6 @@ func setImageContent(url_sign string, content string) {
 	os.WriteFile(abs_file, []byte(content), os.ModePerm)
 }
 
-
 func Image(c flamego.Context, t template.Template, data template.Data) string {
 
 	url := c.Param("id")
@@ -193,12 +190,12 @@ func Image(c flamego.Context, t template.Template, data template.Data) string {
 
 		url_sign := tools.Md5(url)
 		// fmt.Println(url_sign)
-		
+
 		content := getImageContent(url_sign)
 		if !strings.EqualFold(content, "") {
 			return content
 		}
-	
+
 		content, err := tools.GetHttpData(url)
 		if err == nil {
 			setImageContent(url_sign, content)
