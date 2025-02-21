@@ -43,12 +43,12 @@ app_start(){
             fi
         done
         if [ "$isStart" == '' ];then
-                echo -e "\033[31mfailed\033[0m"
-                echo '------------------------------------------------------'
-                tail -n 20 ${app_path}/logs/run_away.log
-                echo '------------------------------------------------------'
-                echo -e "\033[31mError: ${SERVICENAME} service startup failed.\033[0m"
-                return;
+            echo -e "\033[31mfailed\033[0m"
+            echo '------------------------------------------------------'
+            tail -n 20 ${app_path}/logs/run_away.log
+            echo '------------------------------------------------------'
+            echo -e "\033[31mError: ${SERVICENAME} service startup failed.\033[0m"
+            return;
         fi
         echo -e "\033[32mdone\033[0m"
     else
