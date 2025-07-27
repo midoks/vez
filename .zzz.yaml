@@ -1,5 +1,6 @@
 title: vez
 frequency: 3
+lang: go
 dirfilter:
 - tmp
 - .git
@@ -22,9 +23,9 @@ action:
   - go mod tidy
   - go mod vendor
   - gofmt -w ./
+  - ps -ef | grep '[v]ez web' | awk '{print $2}' | xargs -r kill -9 
   after:
-  - ps -ef|grep 'vez web'| grep -v grep | awk '{print $2}' | xargs kill -9 
-  - ps -ef|grep 'vez robot'| grep -v grep | awk '{print $2}' | xargs kill -9 
+  - ps -ef | grep '[v]ez robot' | awk '{print $2}' | xargs -r kill -9
   -  ./vez web &
   exit:
   - ps -ef|grep 'vez web'| grep -v grep
