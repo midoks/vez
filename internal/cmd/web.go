@@ -1,7 +1,8 @@
 package cmd
 
 import (
-	// "fmt"
+	"context"
+	"fmt"
 	"net/http"
 	_ "net/http/pprof"
 	"path/filepath"
@@ -18,7 +19,7 @@ import (
 	"github.com/midoks/vez/internal/assets/public"
 	"github.com/midoks/vez/internal/assets/templates"
 	"github.com/midoks/vez/internal/conf"
-	"github.com/midoks/vez/internal/context"
+	appcontext "github.com/midoks/vez/internal/context"
 	"github.com/midoks/vez/internal/router"
 	"github.com/midoks/vez/internal/tmpl"
 	"github.com/midoks/vez/internal/tools"
@@ -99,39 +100,21 @@ func setRouter(f *flamego.Flame) {
 		f.Get("/csdn/{user}/{id}.html", router.CsdnPageCotent)
 		f.Get("/cnblogs/{user}/{id}.html", router.CnBlogsPageCotent)
 		f.Get("/image/{id}", router.Image)
-	}, context.Contexter())
+	}, appcontext.Contexter())
 
 }
 
 func runWebService(c *cli.Context) error {
+	// 创建上下文用于优雅关闭
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	//check image server
-	go func() {
-		for {
-			pingUrl := conf.Image.Ping
+	// 启动图片服务器健康检查
+	go startImageServerHealthCheck(ctx)
 
-			if pingUrl != "" {
-				r, err := tools.GetHttpData(pingUrl)
-
-				if err != nil {
-					conf.Image.PingStatus = false
-				}
-
-				// fmt.Println("", r, conf.Image.PingResponse, conf.Image.PingStatus)
-				if strings.EqualFold(r, conf.Image.PingResponse) {
-					conf.Image.PingStatus = true
-				}
-			}
-			time.Sleep(time.Second * 25)
-		}
-	}()
-
-	// go tool pprof -http=:11112 --seconds 30 http://127.0.0.1:11012/debug/pprof/profile
+	// 启动pprof服务器（仅在非生产环境）
 	if conf.App.RunMode != "prod" {
-		go func() {
-			port := ":" + conf.Debug.Port
-			http.ListenAndServe(port, nil)
-		}()
+		go startPprofServer()
 	}
 
 	f := newFlamego()
@@ -139,4 +122,43 @@ func runWebService(c *cli.Context) error {
 	f.Run(conf.Web.HttpPort)
 
 	return nil
+}
+
+// startImageServerHealthCheck 启动图片服务器健康检查
+func startImageServerHealthCheck(ctx context.Context) {
+	ticker := time.NewTicker(25 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			checkImageServer()
+		}
+	}
+}
+
+// checkImageServer 检查图片服务器状态
+func checkImageServer() {
+	pingUrl := conf.Image.Ping
+	if pingUrl == "" {
+		return
+	}
+
+	r, err := tools.GetHttpData(pingUrl)
+	if err != nil {
+		conf.Image.PingStatus = false
+		return
+	}
+
+	conf.Image.PingStatus = strings.EqualFold(r, conf.Image.PingResponse)
+}
+
+// startPprofServer 启动pprof服务器
+func startPprofServer() {
+	port := ":" + conf.Debug.Port
+	if err := http.ListenAndServe(port, nil); err != nil {
+		fmt.Printf("Pprof server error: %v\n", err)
+	}
 }

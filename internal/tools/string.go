@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/base64"
-	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"math"
 	"math/rand"
@@ -213,14 +213,30 @@ func RemoveDuplicatesAndEmpty(a []string) (ret []string) {
 }
 
 func GetHttpData(url string) (string, error) {
-	resp, err := http.Get(url)
+	// 创建带超时的HTTP客户端
+	client := &http.Client{
+		Timeout: 30 * time.Second, // 30秒超时
+	}
+
+	resp, err := client.Get(url)
 	if err != nil {
-		return "", errors.New("资源获取错误!")
+		return "", fmt.Errorf("HTTP请求失败: %v", err)
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	return string(body), err
+	// 检查HTTP状态码
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("HTTP请求失败，状态码: %d", resp.StatusCode)
+	}
+
+	// 限制读取大小，防止内存溢出
+	limitedReader := io.LimitReader(resp.Body, 10*1024*1024) // 限制10MB
+	body, err := ioutil.ReadAll(limitedReader)
+	if err != nil {
+		return "", fmt.Errorf("读取响应体失败: %v", err)
+	}
+
+	return string(body), nil
 }
 
 func PathExists(path string) (bool, error) {
@@ -240,9 +256,16 @@ func WriteFile(file string, content string) error {
 
 func ReadFile(file string) (string, error) {
 	f, err := os.OpenFile(file, os.O_RDONLY, 0600)
+	if err != nil {
+		return "", fmt.Errorf("打开文件失败: %v", err)
+	}
 	defer f.Close()
+
 	b, err := ioutil.ReadAll(f)
-	return string(b), err
+	if err != nil {
+		return "", fmt.Errorf("读取文件失败: %v", err)
+	}
+	return string(b), nil
 }
 
 func Base64encode(in string) string {
